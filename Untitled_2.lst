@@ -1,0 +1,244 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 19:35:17 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  SETS
+   2  I REFINERIAS
+   3  /CARTAGENA
+   4  TARRAGONA/
+   5  J DESTINOS
+   6  /ALICANTE
+   7  VALENCIA
+   8  ZARAGOSA
+   9  BARCELONA
+  10  MADRID/;
+  11   
+  12  PARAMETERS
+  13  A(i) OFERTA
+  14  /CARTAGENA 1000
+  15   TARRAGONA 1000/
+  16  B(J) DEMANDA
+  17  /ALICANTE 150
+  18  VALENCIA 250
+  19  ZARAGOSA 200
+  20  BARCELONA 450
+  21  MADRID 500/;
+  22   
+  23  TABLE D(I,J) COSTO UNITARIO DE TRANSPORTE
+  24            ALICANTE VALENCIA ZARAGOSA BARCELONA MADRID
+  25  CARTAGENA 50       60       75        90        70
+  26  TARRAGONA 75       55       50        40        60;
+  27   
+  28  TABLE P(I,J)
+  29            ALICANTE VALENCIA ZARAGOSA BARCELONA MADRID
+  30  CARTAGENA 100      98       95        90        85
+  31  TARRAGONA 95       98       95        100       100;
+  32   
+  33  VARIABLES
+  34  Y(I,J) CANTIDAD TRASPORTADA DE LA REFINERIA AL DESTIN
+  35  Z COSTO TOTAL DE TRANSPORTE DE PETROLEO
+  36   
+  37  POSITIVE VARIABLE Y;
+  38   
+  39  EQUATIONS
+  40  OBJ
+  41  OFERTA (I) RESTRICCION DE CAPACIDAD EN CADA REFINERIA
+  42  DEMANDA (J) RESTRICCION DE DEMANDA EN CADA DESTINO;
+  43  OBJ.. Z=E= SUM((I,J), D(I,J)*Y(I,J));
+  44  OFERTA(i).. SUM(J,Y(I,J))=L=A(I);
+  45  DEMANDA(J).. SUM(I,Y(I,J))=G=B(J);
+  46   
+  47  MODEL PETROLEO /ALL/;
+  48   
+  49  SOLVE PETROLEO USING LP MINIMIZING Z;
+  50   
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 19:35:17 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE PETROLEO Using LP From line 49
+
+
+---- OBJ  =E=  
+
+OBJ..  - 50*Y(CARTAGENA,ALICANTE) - 60*Y(CARTAGENA,VALENCIA)
+     
+      - 75*Y(CARTAGENA,ZARAGOSA) - 90*Y(CARTAGENA,BARCELONA)
+     
+      - 70*Y(CARTAGENA,MADRID) - 75*Y(TARRAGONA,ALICANTE)
+     
+      - 55*Y(TARRAGONA,VALENCIA) - 50*Y(TARRAGONA,ZARAGOSA)
+     
+      - 40*Y(TARRAGONA,BARCELONA) - 60*Y(TARRAGONA,MADRID) + Z =E= 0 ; (LHS = 0)
+     
+
+---- OFERTA  =L=  RESTRICCION DE CAPACIDAD EN CADA REFINERIA
+
+OFERTA(CARTAGENA)..  Y(CARTAGENA,ALICANTE) + Y(CARTAGENA,VALENCIA)
+     
+      + Y(CARTAGENA,ZARAGOSA) + Y(CARTAGENA,BARCELONA) + Y(CARTAGENA,MADRID)
+      =L= 1000 ; (LHS = 0)
+     
+OFERTA(TARRAGONA)..  Y(TARRAGONA,ALICANTE) + Y(TARRAGONA,VALENCIA)
+     
+      + Y(TARRAGONA,ZARAGOSA) + Y(TARRAGONA,BARCELONA) + Y(TARRAGONA,MADRID)
+      =L= 1000 ; (LHS = 0)
+     
+
+---- DEMANDA  =G=  RESTRICCION DE DEMANDA EN CADA DESTINO
+
+DEMANDA(ALICANTE)..  Y(CARTAGENA,ALICANTE) + Y(TARRAGONA,ALICANTE) =G= 150 ;
+     
+      (LHS = 0, INFES = 150 ****)
+     
+DEMANDA(VALENCIA)..  Y(CARTAGENA,VALENCIA) + Y(TARRAGONA,VALENCIA) =G= 250 ;
+     
+      (LHS = 0, INFES = 250 ****)
+     
+DEMANDA(ZARAGOSA)..  Y(CARTAGENA,ZARAGOSA) + Y(TARRAGONA,ZARAGOSA) =G= 200 ;
+     
+      (LHS = 0, INFES = 200 ****)
+     
+REMAINING 2 ENTRIES SKIPPED
+
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 19:35:17 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE PETROLEO Using LP From line 49
+
+
+---- Y  CANTIDAD TRASPORTADA DE LA REFINERIA AL DESTIN
+
+Y(CARTAGENA,ALICANTE)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+      -50       OBJ
+        1       OFERTA(CARTAGENA)
+        1       DEMANDA(ALICANTE)
+
+Y(CARTAGENA,VALENCIA)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+      -60       OBJ
+        1       OFERTA(CARTAGENA)
+        1       DEMANDA(VALENCIA)
+
+Y(CARTAGENA,ZARAGOSA)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+      -75       OBJ
+        1       OFERTA(CARTAGENA)
+        1       DEMANDA(ZARAGOSA)
+
+REMAINING 7 ENTRIES SKIPPED
+
+---- Z  COSTO TOTAL DE TRANSPORTE DE PETROLEO
+
+Z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       OBJ
+
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 19:35:17 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE PETROLEO Using LP From line 49
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES           11
+NON ZERO ELEMENTS            31
+
+
+GENERATION TIME      =        0.047 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 19:35:17 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE PETROLEO Using LP From line 49
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   PETROLEO            OBJECTIVE  Z
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  49
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      1 Optimal                   
+**** OBJECTIVE VALUE            82000.0000
+
+ RESOURCE USAGE, LIMIT          0.062 10000000000.000
+ ITERATION COUNT, LIMIT         7    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.05sec (det. 0.02 ticks)
+
+
+Optimal solution found
+Objective:        82000.000000
+
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- EQU OBJ             .         .         .        1.000      
+
+---- EQU OFERTA  RESTRICCION DE CAPACIDAD EN CADA REFINERIA
+
+             LOWER     LEVEL     UPPER    MARGINAL
+
+CARTAGENA     -INF    550.000  1000.000      .         
+TARRAGONA     -INF   1000.000  1000.000   -10.000      
+
+---- EQU DEMANDA  RESTRICCION DE DEMANDA EN CADA DESTINO
+
+             LOWER     LEVEL     UPPER    MARGINAL
+
+ALICANTE    150.000   150.000     +INF     50.000      
+VALENCIA    250.000   250.000     +INF     60.000      
+ZARAGOSA    200.000   200.000     +INF     60.000      
+BARCELONA   450.000   450.000     +INF     50.000      
+MADRID      500.000   500.000     +INF     70.000      
+
+---- VAR Y  CANTIDAD TRASPORTADA DE LA REFINERIA AL DESTIN
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+CARTAGENA.ALICANTE       .      150.000     +INF       .         
+CARTAGENA.VALENCIA       .      250.000     +INF       .         
+CARTAGENA.ZARAGOSA       .         .        +INF     15.000      
+CARTAGENA.BARCELONA      .         .        +INF     40.000      
+CARTAGENA.MADRID         .      150.000     +INF       .         
+TARRAGONA.ALICANTE       .         .        +INF     35.000      
+TARRAGONA.VALENCIA       .         .        +INF      5.000      
+TARRAGONA.ZARAGOSA       .      200.000     +INF       .         
+TARRAGONA.BARCELONA      .      450.000     +INF       .         
+TARRAGONA.MADRID         .      350.000     +INF       .         
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- VAR Z              -INF  82000.000     +INF       .         
+
+  Z  COSTO TOTAL DE TRANSPORTE DE PETROLEO
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+
+
+EXECUTION TIME       =        0.297 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Progra
+           mas GAMS\Untitled_2.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Progra
+           mas GAMS\Untitled_2.lst

@@ -1,0 +1,17 @@
+B 3 C o m p i l a t i o n
+B 38 Equation Listing    SOLVE pinturas Using MIP From line 26
+D 41 produccion
+D 52 restriccion
+D 63 costetotal
+B 73 Column Listing      SOLVE pinturas Using MIP From line 26
+E 76 y
+E 98 z
+E 119 coste
+B 127 Model Statistics    SOLVE pinturas Using MIP From line 26
+B 140 Solution Report     SOLVE pinturas Using MIP From line 26
+F 181 produccion
+F 188 restriccion
+F 201 costetotal
+G 205 y
+G 216 z
+G 226 coste

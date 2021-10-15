@@ -1,0 +1,15 @@
+B 3 C o m p i l a t i o n
+B 61 Equation Listing    SOLVE PETROLEO Using LP From line 49
+D 64 OBJ
+D 77 OFERTA
+D 90 DEMANDA
+B 108 Column Listing      SOLVE PETROLEO Using LP From line 49
+E 111 Y
+E 133 Z
+B 141 Model Statistics    SOLVE PETROLEO Using LP From line 49
+B 154 Solution Report     SOLVE PETROLEO Using LP From line 49
+F 186 OBJ
+F 188 OFERTA
+F 195 DEMANDA
+G 205 Y
+G 222 Z

@@ -1,0 +1,37 @@
+[PROJECT]
+
+[RP:UNTITLED_4]
+1=
+
+[RP:PETROLEO]
+1=
+
+[RP:PINTURAS]
+1=
+
+[OPENWINDOW_1]
+MAXIM=0
+TOP=-4
+LEFT=102
+HEIGHT=641
+WIDTH=1181
+
+[RP:ZUMOTEC]
+1=
+
+[RP:ZUMOTEC (1)]
+1=
+
+[RP:REACTORBATCH_ES]
+1=
+
+[MRUFILES]
+1=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\reactorbatch_es.lst
+2=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Artículos para modelar\Parcial 3 Modelado\reactorbatch_es.gms
+3=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\ZUMOTEC (1).lst
+4=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\ZUMOTEC (1).gms
+5=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\ZUMOTEC.lst
+6=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\ZUMOTEC.gms
+7=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\pinturas.gms
+8=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\petroleo.gms
+9=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\Untitled_4.gms

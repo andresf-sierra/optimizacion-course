@@ -1,0 +1,23 @@
+B 3 C o m p i l a t i o n
+B 32 Equation Listing    SOLVE ejemplo1 Using LP From line 21
+D 35 obj
+D 40 restr1
+D 45 restr2
+D 50 restr3
+B 56 Column Listing      SOLVE ejemplo1 Using LP From line 21
+E 59 xA
+E 68 xB
+E 78 xC
+E 86 xD
+E 94 Z
+B 102 Model Statistics    SOLVE ejemplo1 Using LP From line 21
+B 115 Solution Report     SOLVE ejemplo1 Using LP From line 21
+F 147 obj
+F 148 restr1
+F 149 restr2
+F 150 restr3
+G 154 xA
+G 155 xB
+G 156 xC
+G 157 xD
+G 158 Z

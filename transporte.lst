@@ -1,0 +1,209 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:49:53 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  SETS
+   2  i PLANTAS /CUC, BOY/
+   3  j DESTINOS /BUC, BOG, PAM/;
+   4   
+   5  PARAMETERS
+   6   
+   7  a(i) CAPACIDAD DE ALMACENAMIENTO
+   8  /CUC 350
+   9   BOY 600/
+  10  b(j) DEMANDA
+  11  /BUC 275
+  12   BOG 325
+  13   PAM 300/;
+  14   
+  15  TABLE d(i,j) distancia en km
+  16           BUC BOG  PAM
+  17       CUC 538 1046 439
+  18       BOY 393 693  673 ;
+  19   
+  20  SCALAR F costo unitario por km /5/
+  21   
+  22  PARAMETER c(i,j) cost unitario de transporte;
+  23  c(i,j)=f*d(i,j);
+  24   
+  25  VARIABLES
+  26  x(i,j)
+  27  z;
+  28   
+  29  POSITIVE VARIABLES x;
+  30   
+  31  EQUATIONS
+  32   
+  33  obj
+  34  capacidad(i)
+  35  demanda(j);
+  36   
+  37  obj.. z =E= sum((i,j),c(i,j)*x(i,j));
+  38  capacidad(i).. sum(j,x(i,j))=L= a(i);
+  39  demanda(j).. sum(i, x(i,j))=G= b(j);
+  40   
+  41  MODEL transporte /ALL/;
+  42   
+  43  SOLVE transporte USING LP MINIMIZING z;
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:49:53 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE transporte Using LP From line 43
+
+
+---- obj  =E=  
+
+obj..  - 2690*x(CUC,BUC) - 5230*x(CUC,BOG) - 2195*x(CUC,PAM) - 1965*x(BOY,BUC)
+     
+      - 3465*x(BOY,BOG) - 3365*x(BOY,PAM) + z =E= 0 ; (LHS = 0)
+     
+
+---- capacidad  =L=  
+
+capacidad(CUC)..  x(CUC,BUC) + x(CUC,BOG) + x(CUC,PAM) =L= 350 ; (LHS = 0)
+     
+capacidad(BOY)..  x(BOY,BUC) + x(BOY,BOG) + x(BOY,PAM) =L= 600 ; (LHS = 0)
+     
+
+---- demanda  =G=  
+
+demanda(BUC)..  x(CUC,BUC) + x(BOY,BUC) =G= 275 ; (LHS = 0, INFES = 275 ****)
+     
+demanda(BOG)..  x(CUC,BOG) + x(BOY,BOG) =G= 325 ; (LHS = 0, INFES = 325 ****)
+     
+demanda(PAM)..  x(CUC,PAM) + x(BOY,PAM) =G= 300 ; (LHS = 0, INFES = 300 ****)
+     
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:49:53 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE transporte Using LP From line 43
+
+
+---- x  
+
+x(CUC,BUC)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -2690       obj
+        1       capacidad(CUC)
+        1       demanda(BUC)
+
+x(CUC,BOG)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -5230       obj
+        1       capacidad(CUC)
+        1       demanda(BOG)
+
+x(CUC,PAM)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -2195       obj
+        1       capacidad(CUC)
+        1       demanda(PAM)
+
+REMAINING 3 ENTRIES SKIPPED
+
+---- z  
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj
+
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:49:53 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE transporte Using LP From line 43
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            19
+
+
+GENERATION TIME      =        0.062 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:49:53 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE transporte Using LP From line 43
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   transporte          OBJECTIVE  z
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  43
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      1 Optimal                   
+**** OBJECTIVE VALUE          2325000.0000
+
+ RESOURCE USAGE, LIMIT          0.047 10000000000.000
+ ITERATION COUNT, LIMIT         3    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.03sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:      2325000.000000
+
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- EQU obj             .         .         .        1.000      
+
+---- EQU capacidad  
+
+       LOWER     LEVEL     UPPER    MARGINAL
+
+CUC     -INF    300.000   350.000      .         
+BOY     -INF    600.000   600.000      .         
+
+---- EQU demanda  
+
+       LOWER     LEVEL     UPPER    MARGINAL
+
+BUC   275.000   275.000     +INF   1965.000      
+BOG   325.000   325.000     +INF   3465.000      
+PAM   300.000   300.000     +INF   2195.000      
+
+---- VAR x  
+
+           LOWER     LEVEL     UPPER    MARGINAL
+
+CUC.BUC      .         .        +INF    725.000      
+CUC.BOG      .         .        +INF   1765.000      
+CUC.PAM      .      300.000     +INF       .         
+BOY.BUC      .      275.000     +INF       .         
+BOY.BOG      .      325.000     +INF       .         
+BOY.PAM      .         .        +INF   1170.000      
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- VAR z              -INF  2.3250E+6     +INF       .         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+
+
+EXECUTION TIME       =        0.281 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Progra
+           mas GAMS\transporte.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Progra
+           mas GAMS\transporte.lst

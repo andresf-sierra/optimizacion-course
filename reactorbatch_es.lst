@@ -1,0 +1,181 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 06/23/21 13:28:21 Page 1
+Optimal Design for Chemical Batch Processing (BATCHDES,SEQ=119)
+C o m p i l a t i o n
+
+
+   2   
+      Un proceso qu�mico por lotes que tiene tres etapas de procesamiento:
+      mezcla, reacci�n y separaci�n por centrifugaci�n, produce dos productos.
+      Este modelo modelo se utiliza para determinar el n�mero y el tama�o de
+      las unidades que operar en paralelo en cada etapa.
+      El modelo resultante es no lineal y entero mixto
+       
+       
+      Morari, M, and Grossmann, I E, Eds, Chemical Engineering Optimization
+      Models with GAMS. Computer Aids for Chemical Engineering Corporation,
+      1991.
+       
+      Kocis, G R, and Grossmann, I E, Global Optimization of Nonconvex MINLP
+      Problems in Process Synthesis. Independent Engineering Chemical
+      Research 27 (1988), 1407-1421.
+       
+      Keywords: mixed integer nonlinear programming, chemical engineering, chemi
+      cal
+                industry, chemical batch process, process designment
+  22   
+  23  Set
+  24     i 'productos'    / a, b /
+  25     j 'Etapas'      / mixer, reactor, centrifugadora /
+  26     k 'número potencial de unidades paralelas' / 1*3 /;
+  27   
+  28  Scalar
+  29     h    'tiempo de horizonte o suceso  (tiempo en horas)' / 6000. /
+  30     vlow 'límite inferior para el tamaño de la unidad batch' / 250.  /
+  31     vupp 'límite superior para el tamaño de la unidad batch' / 2500. /;
+  32   
+  33  Parameter
+  34     q(i)     'demanda del producto i'
+  35              / a 200000
+  36                b 150000 /
+  37     alpha(j) 'coeficiente de coste para las unidades batch'
+  38              / mixer          250.
+  39                reactor        500.
+  40                centrifugadora 340. /
+  41     beta(j)  'exponente de coste para las unidades batch'
+  42              / mixer          0.6
+  43                reactor        0.6
+  44                centrifugadora 0.6  /
+  45   
+  46  * The parameters below are defined to obtain the original variables
+  47     actv(j)  'volumen actual                 (l)'
+  48     actb(i)  'tamaños de batch reales       (kg)'
+  49     acttl(i) 'tiempos de ciclo reales      (hrs)'
+  50     actn(j)  'número de unidades en paralelo    '
+  51     coeff(k) 'representan el número de unidades paralelas';
+  52   
+  53  coeff(k) = log(ord(k));
+  54   
+  55  Table s(i,j) 'factor de tamaño para el producto i en la etapa j (kg per l
+      )'
+  56         mixer  reactor  centrifugugadora
+****                                        $170
+**** 170  Domain violation for element
+  57     a       2        3                 4
+  58     b       4        6                 3;
+  59   
+  60  Table t(i,j) 'tiempo de procesamiento del producto i en el lote j   (hrs)'
+  61         mixer  reactor  centrifugugadora
+****                                        $170
+**** 170  Domain violation for element
+  62     a       8       20                 4
+  63     b      10       12                 3;
+  64   
+  65  Variable
+  66      y(k,j) 'variable binaria que denota la existencia de la etapa'
+  67      v(j)   'volumen de la etapaj                    (l)'
+  68      b(i)   'tamaño del lote de producto i          (kg)'
+  69      tl(i)  'tiempo de ciclo del producto i         hrs)'
+  70      n(j)   'número de unidades en etapa paralela j'
+  71      cost   'coste total de las unidades de procesamiento por lotes ($)';
+  72   
+  73  Binary   Variable y(k,j);
+  74  Positive Variable v(j), b(i), tl(i), n(j);
+  75   
+  76  Equation
+  77     vol(i,j)   'calcular el volumen de etapa j'
+  78     cycle(i,j) 'calcular el tiempo de ciclo del producto i'
+  79     time       'limitación de tiempo'
+  80     units(j)   'calcular el número de unidades de procesamiento por etapa'
+  81     lim(j)     'limitar la selección a un número'
+  82     obj        'definición de la función objetivo';
+  83   
+  84  * Formulación convexa de las ecuaciones del modelo
+  85  * Volumen requerido en la etapa j
+  86  vol(i,j)..   v(j) =g= log(s(i,j)) + b(i);
+  87   
+  88  * Duración del ciclo de cada producto i
+  89  cycle(i,j).. n(j) + tl(i) =g= log(t(i,j));
+  90   
+  91  * Limitación del tiempo de producción
+  92  time..       sum(i, q(i)*exp(tl(i) - b(i))) =l= h;
+  93   
+  94  * Relacionar el número de unidades con las variables 0-1
+  95  units(j)..   n(j) =e= sum(k , coeff(k)*y(k,j));
+  96   
+  97  * Sólo es factible una opción para las unidades paralelas
+  98  lim(j)..     sum(k, y(k,j)) =e= 1;
+  99   
+ 100  * Definición de la función objetivo
+ 101  obj..        cost =g= sum(j, alpha(j)*(exp(n(j) + beta(j)*v(j))));
+ 102   
+ 103  Model batch / all /;
+ 104   
+ 105  * sección de límites
+ 106  v.lo(j) = log(vlow);
+ 107  v.up(j) = log(vupp);
+ 108  n.up(j) = log(3.);
+ 109   
+ 110  * a continuación se calculan límites inferiores ajustados para los tiemp
+      os de ciclo y los tamaños de los lotes
+ 111  Parameter
+ 112     tllow(i) 'límite inferior de tl(i)'
+ 113     tlupp(i) 'límite superior de tl(i)';
+ 114   
+ 115  tllow(i) = smax(j, t(i,j)/exp(n.up(j)));
+ 116  tlupp(i) = smax(j, t(i,j));
+ 117  tl.lo(i) = log(tllow(i));
+ 118  tl.up(i) = log(tlupp(i));
+ 119   
+ 120  Parameter
+ 121     blow(i) 'límite inferior de b(i)'
+ 122     bupp(i) 'límite superior de b(i)';
+ 123   
+ 124  blow(i) = q(i)*(smax(j, t(i,j)/exp(n.up(j))))/h;
+ 125  bupp(i) = min(q(i), smin(j, exp(v.up(j))/s(i,j)));
+ 126  b.lo(i) = log(blow(i));
+ 127  b.up(i) = log(bupp(i));
+ 128   
+ 129  * punto inicial
+ 130  * variables binarias establecidas para 3 unidades por etapa
+ 131  y.l(k,j)              = 0;
+ 132  y.l('3','mixer')      = 1;
+ 133  y.l('3','reactor')    = 1;
+ 134  y.l('3','centrifugadora') = 1;
+ 135  n.l(j)                = sum(k, coeff(k)*y.l(k,j));
+ 136   
+ 137  * los tamaños de los lotes se fijan en el punto medio entre los límites
+ 138  b.l(i)  = (b.up(i) + b.lo(i))/2;
+ 139  v.l(j)  = smax(i,log(s(i,j)) + b.l(i));
+ 140  tl.l(i) = smax(j,log(t(i,j)) - n.l(j));
+ 141   
+ 142  solve batch using minlp minimizing cost;
+****                                         $257
+**** 257  Solve statement not checked because of previous errors
+ 143   
+ 144  * convertir las variables en su forma original
+ 145  actv(j)  = exp(v.l(j));
+ 146  actb(i)  = exp(b.l(i));
+ 147  acttl(i) = exp(tl.l(i));
+ 148  actn(j)  = exp(n.l(j));
+ 149   
+ 150  * diseño óptimo
+ 151  display actv, actb, acttl, actn;
+
+**** 3 ERROR(S)   0 WARNING(S)
+
+
+COMPILATION TIME     =        0.032 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimizaci�n de Procesos\Art�cu
+           los para modelar\Parcial 3 Modelado\reactorbatch_es.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimizaci�n de Procesos\Progra
+           mas GAMS\reactorbatch_es.lst
+
+**** USER ERROR(S) ENCOUNTERED

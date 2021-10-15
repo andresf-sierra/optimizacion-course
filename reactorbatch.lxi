@@ -1,0 +1,27 @@
+B 3 C o m p i l a t i o n
+B 78 Equation Listing    SOLVE batchReactor Using NLP From line 68
+D 81 eobj
+D 86 state1
+D 97 state2
+D 108 ek1
+D 119 ek2
+B 131 Column Listing      SOLVE batchReactor Using NLP From line 68
+E 134 ca
+E 157 cb
+E 175 t
+E 197 k1
+E 223 k2
+E 244 obj
+B 252 Model Statistics    SOLVE batchReactor Using NLP From line 68
+B 266 Solution Report     SOLVE batchReactor Using NLP From line 68
+F 322 eobj
+F 326 state1
+F 431 state2
+F 536 ek1
+F 642 ek2
+G 748 ca
+G 854 cb
+G 960 t
+G 1066 k1
+G 1172 k2
+G 1280 obj

@@ -1,0 +1,140 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/20/21 11:46:15 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   3   
+   4  option limrow=0;
+   5  option limcol=0;
+   6  option solprint=on;
+   7  option sysout=off;
+   8   
+   9  option LP=CPLEX;
+  10  option MIP=CPLEX;
+  11  option NLP=CONOPT;
+  12  option MINLP=DICOPT;
+  13  option OPTCR=0;
+  14   
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/20/21 11:46:15 Page 2
+PRUEBA
+C o m p i l a t i o n
+
+
+  16   
+      Se trata de resolver la siguiente ecuación lineal sujeta a una serie de re
+      stricciones
+       
+      Min F(x) = 3*x1 + 2*x2 + x3 + 2*x4 + 3*x5
+       
+      s.a:
+               2*x1 + 5*x2 + x4 + x5 >= 6
+               4*x2 - 2*x3 + 2*x4 + 3*x5 >=5
+               x1 - 6*x2 + 3*x3 + 7*x4 + 5*x5 >= 7
+               x1, x2, x3, x4, x5, no negativas
+       
+      Con esto podría poner un enunciado
+       
+  31   
+  32  VARIABLES
+  33  x1, x2, x3, x4, x5, F;
+  34   
+  35  POSITIVE VARIABLES
+  36   
+  37  x1, x2, x3, x4, x5;
+  38   
+  39  EQUATIONS
+  40   
+  41  funobj, eq1, eq2, eq3 ;
+  42   
+  43  funobj.. F =E= 3*x1 + 2*x2 + x3 + 2*x4 +3*x5;
+  44  eq1.. 2*x1 + 5*x2 + x4 + x5 =G= 6;
+  45  eq2.. 4*x2 - 2*x3 + 2*x4 + 3*x5 =G= 5;
+  46  eq3.. x1 - 6*x2 + 3*x3 + 7*x4 + 5*x5 =G= 7;
+  47   
+  48  MODEL problema1 /funobj, eq1, eq2, eq3/;
+  49   
+  50   
+  51  SOLVE problema1 using LP minimazing F ;
+
+
+COMPILATION TIME     =        0.078 SECONDS      2 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/20/21 11:46:15 Page 3
+PRUEBA
+Model Statistics    SOLVE problema1 Using LP From line 51
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            4
+BLOCKS OF VARIABLES           6     SINGLE VARIABLES            6
+NON ZERO ELEMENTS            19
+
+
+GENERATION TIME      =        0.016 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/20/21 11:46:15 Page 4
+PRUEBA
+Solution Report     SOLVE problema1 Using LP From line 51
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   problema1           OBJECTIVE  F
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  51
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      1 Optimal                   
+**** OBJECTIVE VALUE                5.1707
+
+ RESOURCE USAGE, LIMIT          0.094 10000000000.000
+ ITERATION COUNT, LIMIT         2    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.06sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            5.170732
+
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- EQU funobj          .         .         .        1.000      
+---- EQU eq1            6.000     6.000     +INF      0.634      
+---- EQU eq2            5.000     6.878     +INF       .         
+---- EQU eq3            7.000     7.000     +INF      0.195      
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- VAR x1              .         .        +INF      1.537      
+---- VAR x2              .        0.854     +INF       .         
+---- VAR x3              .         .        +INF      0.415      
+---- VAR x4              .        1.732     +INF       .         
+---- VAR x5              .         .        +INF      1.390      
+---- VAR F              -INF      5.171     +INF       .         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+
+
+EXECUTION TIME       =        0.281 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\p
+           ruebacachem.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\p
+           ruebacachem.lst

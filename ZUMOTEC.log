@@ -1,0 +1,36 @@
+
+--- Job ZUMOTEC.gms Start 06/16/21 15:51:59 34.3.0 rac355f3 WEX-WEI x86 64bit/MS Windows
+--- Applying:
+    C:\GAMS\34\gmsprmNT.txt
+--- GAMS Parameters defined
+    Input "D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\ZUMOTEC.gms"
+    PageWidth 80
+    PageSize 0
+    PageContr 3
+    Action CE
+    ScrDir "D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\225a\"
+    SysDir C:\GAMS\34\
+    WorkDir "D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\"
+    LogOption 3
+    DFormat 0
+    TFormat 0
+    ErrorLog 99
+    IDE 1
+Licensee: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+          Universidad de Pamplona, Colombia                        DL037498
+          C:\GAMS\34\gamslice.txt
+          andrew.lol.serra@gmail.com, Andres Sierra                        
+          Demo license for demonstration and instructional purposes only
+GAMS 34.3.0   Copyright (C) 1987-2021 GAMS Development. All rights reserved
+--- Starting compilation
+--- ZUMOTEC.gms(19) 2 Mb 1 Error
+*** Error 409 in D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\ZUMOTEC.gms
+    Unrecognizable item - skip to find a new statement
+      looking for a ';' or a key word to get started again
+--- ZUMOTEC.gms(29) 2 Mb 2 Errors
+*** Error 257 in D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\ZUMOTEC.gms
+    Solve statement not checked because of previous errors
+--- ZUMOTEC.gms(31) 2 Mb 2 Errors
+*** Status: Compilation error(s)
+--- Job ZUMOTEC.gms Stop 06/16/21 15:52:00 elapsed 0:00:00.132
+Exit code = 2

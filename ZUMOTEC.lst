@@ -1,0 +1,65 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 06/16/21 15:51:59 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  ** La empresa ZUMOTECse dedica a la obtención de zumos de frutas exóti
+      cas.
+   2  ** En el proceso de transformación se utiliza zumo puro, agua y otros
+   3  ** aditivos que diferencian sus zumos respecto a los de la competencia.
+   4  ** El zumo puro se obtiene exprimiendo las frutas y desechando las pieles 
+      y
+   5  ** otros residuos sólidos. ZUMOTEC tiene tres clases de zumo: A, B y C, 
+      que
+   6  ** se diferencian en la cantidad de zumo puro, agua y aditivos
+   7   
+   8   
+   9   
+  10  VARIABLES
+  11  ZUMOA,ZUMOB,ZUMOC,B;
+  12   
+  13   
+  14  POSITIVE VARIABLES ZUMOA,ZUMOB,ZUMOC;
+  15  ZUMOA.L = 30; ZUMOB.L = 30; ZUMOC.L = 30;
+  16   
+  17  EQUATIONS
+  18  OBJ, R1, R2, R3, R4;
+  19  OBJ..    B =E= (2*ZUMOA)^2 + ZUMOB^2 + (2*ZUMOC)^2 - 10*ZUMOA - 2*ZUMOB -3
+****                          $409
+      *ZUMOC;
+**** 409  Unrecognizable item - skip to find a new statement
+****        looking for a ';' or a key word to get started again
+  20   
+  21   
+  22  R1..      (2/4)*ZUMOA + (5/9)*ZUMOB    + (3/6)*ZUMOC =L= (20000*7/10);
+  23  R2..            ZUMOA  - 0.4*(ZUMOA+ZUMOB     +ZUMOC)=L=0;
+  24  R3..                          ZUMOB - 0.4*(ZUMOA+ZUMOB+ZUMOC)=L=0;
+  25  R4..                                           ZUMOC - 0.4*(ZUMOA+ZUMOB+ZU
+      MOC)=L=0;
+  26   
+  27   
+  28  MODEL ZUMOTEC /ALL/;
+  29  SOLVE ZUMOTEC USING NLP MAXIMIZING B;
+****                                      $257
+**** 257  Solve statement not checked because of previous errors
+  30   
+  31  **DISPLAY R1.M;
+
+**** 2 ERROR(S)   0 WARNING(S)
+
+
+COMPILATION TIME     =        0.016 SECONDS      2 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimizaci�n de Procesos\Progra
+           mas GAMS\ZUMOTEC.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimizaci�n de Procesos\Progra
+           mas GAMS\ZUMOTEC.lst
+
+**** USER ERROR(S) ENCOUNTERED

@@ -1,0 +1,33 @@
+[PROJECT]
+
+[RP:UNTITLED_1]
+1=
+
+[RP:EJERCICIO TRANS]
+1=
+
+[RP:TRANSPORTE]
+1=
+
+[RP:UNTITLED_2]
+1=
+
+[RP:UNTITLED_3]
+1=
+
+[MRUFILES]
+1=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\Untitled_3.gms
+2=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\Untitled_2.lst
+
+[OPENWINDOW_1]
+FILE0=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\EJERCICIO TRANS.gms
+FILE1=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\EJERCICIO TRANS.lst
+FILE2=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\transporte.gms
+FILE3=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\transporte.lst
+FILE4=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\Untitled_2.gms
+FILE5=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\Untitled_2.gms
+MAXIM=0
+TOP=8
+LEFT=114
+HEIGHT=568
+WIDTH=853

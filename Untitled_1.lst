@@ -1,0 +1,178 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 16:05:41 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  OPTIONS
+   2           LP=CPLEX;
+   3   
+   4  VARIABLES xA, xB, xC, xD, Z;
+   5   
+   6  POSITIVE VARIABLES  xA, xB, xC, xD;
+   7   
+   8  EQUATIONS obj, restr1, restr2, restr3;
+   9  obj.. Z =E= 4*xA + 9*xB + 2*xC - xD;
+  10   
+  11  restr1.. 3.1*xB =E= xC + xD;
+  12   
+  13  restr2.. 2.6*xA + 4.7*xB =L= 60;
+  14   
+  15  restr3.. 3.3*xA + 4.6*xB =L= 65;
+  16   
+  17  xC.UP = 12;
+  18   
+  19  MODEL ejemplo1 /ALL/;
+  20   
+  21  SOLVE ejemplo1 using LP maximizing Z;
+
+
+COMPILATION TIME     =        0.062 SECONDS      2 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 16:05:41 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE ejemplo1 Using LP From line 21
+
+
+---- obj  =E=  
+
+obj..  - 4*xA - 9*xB - 2*xC + xD + Z =E= 0 ; (LHS = 0)
+     
+
+---- restr1  =E=  
+
+restr1..  3.1*xB - xC - xD =E= 0 ; (LHS = 0)
+     
+
+---- restr2  =L=  
+
+restr2..  2.6*xA + 4.7*xB =L= 60 ; (LHS = 0)
+     
+
+---- restr3  =L=  
+
+restr3..  3.3*xA + 4.6*xB =L= 65 ; (LHS = 0)
+     
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 16:05:41 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE ejemplo1 Using LP From line 21
+
+
+---- xA  
+
+xA
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -4       obj
+        2.6     restr2
+        3.3     restr3
+
+
+---- xB  
+
+xB
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -9       obj
+        3.1     restr1
+        4.7     restr2
+        4.6     restr3
+
+
+---- xC  
+
+xC
+                (.LO, .L, .UP, .M = 0, 0, 12, 0)
+       -2       obj
+       -1       restr1
+
+
+---- xD  
+
+xD
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       obj
+       -1       restr1
+
+
+---- Z  
+
+Z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       obj
+
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 16:05:41 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE ejemplo1 Using LP From line 21
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            4
+BLOCKS OF VARIABLES           5     SINGLE VARIABLES            5
+NON ZERO ELEMENTS            12
+
+
+GENERATION TIME      =        0.250 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 16:05:41 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE ejemplo1 Using LP From line 21
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   ejemplo1            OBJECTIVE  Z
+     TYPE    LP                  DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  21
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      1 Optimal                   
+**** OBJECTIVE VALUE              117.4366
+
+ RESOURCE USAGE, LIMIT          1.844 10000000000.000
+ ITERATION COUNT, LIMIT         2    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.03sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:          117.436620
+
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- EQU obj             .         .         .        1.000      
+---- EQU restr1          .         .         .        1.000      
+---- EQU restr2         -INF     60.000    60.000     0.301      
+---- EQU restr3         -INF     65.000    65.000     0.975      
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- VAR xA              .        8.310     +INF       .         
+---- VAR xB              .        8.169     +INF       .         
+---- VAR xC              .       12.000    12.000     3.000      
+---- VAR xD              .       13.324     +INF       .         
+---- VAR Z              -INF    117.437     +INF       .         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+
+
+EXECUTION TIME       =        2.610 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Progra
+           mas GAMS\Untitled_1.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Progra
+           mas GAMS\Untitled_1.lst

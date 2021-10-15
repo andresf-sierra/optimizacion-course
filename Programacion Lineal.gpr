@@ -1,0 +1,29 @@
+[PROJECT]
+
+[RP:UNTITLED_1]
+1=
+
+[RP:PRUEBACACHEM]
+1=
+
+[RP:PROG LINEAL]
+1=
+
+[RP:LINEAL]
+1=
+
+[MRUFILES]
+1=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\pruebacachem.gms
+2=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\pruebacachem.lst
+3=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\prog lineal.lst
+4=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\Untitled_1.gms
+
+[OPENWINDOW_1]
+FILE0=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\lineal.gms
+FILE1=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\prog lineal.gms
+FILE2=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\prog lineal.gms
+MAXIM=1
+TOP=50
+LEFT=50
+HEIGHT=400
+WIDTH=400

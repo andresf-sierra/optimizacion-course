@@ -1,0 +1,1301 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 06/22/21 21:21:37 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+      Optimal control of a batch reactor.
+      Find the optimal temperature profile which gives maximum intermediate product
+      concentration in a batch reactor with two consecutive reactions. The first
+      reaction is of second order and the second one is of first order with known
+      rate constants.
+       
+      Renfro J.G., Morshedi, A.M., Osbjornsen, O.A., Simultaneous optimization and
+      solution of systems described by differential/algebraic equations. Computer
+      and Chemical Engineering, vol.11, 1987, pp.503-517.
+  12   
+  15   
+  16  set nh Number of subintervals / 0*100 /;
+  17  alias (nh,k);
+  18   
+  19  Scalar    tf   final time            / 100/
+  20            ca_0 initial value for ca  / 1.0/
+  21            cb_0 initial value for cb  / 0.0/
+  22            h  ;
+  23            h=tf/100 ;
+  24   
+  25  Variables ca(nh)  concentration of component A
+  26            cb(nh)  concentration of component B
+  27            t(nh)   temperature of reactor (control variable)
+  28            k1(nh)  rate constant for the first reaction
+  29            k2(nh)  rate constant for the second reaction
+  30            obj     criterion ;
+  31   
+  32  Equations eobj        criterion definition
+  33            state1(nh)  state equation 1
+  34            state2(nh)  state equation 2
+  35            ek1(nh)
+  36            ek2(nh) ;
+  37   
+  38  eobj..
+  39   obj =e= cb['100'] ;
+  40   
+  41   ek1(nh(k)).. k1(k) =e= 4000*exp(-2500/t(k));
+  42   ek2(nh(k)).. k2(k) =e= 620000*exp(-5000/t(k));
+  43   
+  44  state1(nh(k+1))..
+  45   ca[k+1] =e= ca(k)+
+  46               (h/2)*(-k1(k)*ca(k)*ca(k) - k1(k+1)*ca(k+1)*ca(k+1) ) ;
+  47   
+  48  state2(nh(k+1))..
+  49   cb[k+1] =e= cb(k)+
+  50               (h/2)*( k1(k)*ca(k)*ca(k) - k2(k)*cb(k) +
+  51                       k1(k+1)*ca(k+1)*ca(k+1) - k2(k+1)*cb(k+1) );
+  52   
+  53  *Initial point
+  54  ca.l[nh] = 1.0;
+  55  cb.l[nh] = 0.0;
+  56   
+  57  ca.fx ['0'] = ca_0;
+  58  cb.fx ['0'] = cb_0;
+  59   
+  60  *Bounds
+  61  t.lo(nh) = 110;
+  62  t.up(nh) = 280;
+  63   
+  64  Model batchReactor /all/;
+  65   
+  67   
+  68  Solve batchReactor maximizing obj using nlp;
+  69   
+  71   
+  72   
+  73  * End of batchReactor
+
+
+COMPILATION TIME     =        0.015 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 06/22/21 21:21:37 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE batchReactor Using NLP From line 68
+
+
+---- eobj  =E=  criterion definition
+
+eobj..  - cb(100) + obj =E= 0 ; (LHS = 0)
+     
+
+---- state1  =E=  state equation 1
+
+state1(1)..  - (1)*ca(0) + (1)*ca(1) + (0.5)*k1(0) + (0.5)*k1(1) =E= 0 ; (LHS = 0)
+     
+state1(2)..  - (1)*ca(1) + (1)*ca(2) + (0.5)*k1(1) + (0.5)*k1(2) =E= 0 ; (LHS = 0)
+     
+state1(3)..  - (1)*ca(2) + (1)*ca(3) + (0.5)*k1(2) + (0.5)*k1(3) =E= 0 ; (LHS = 0)
+     
+REMAINING 97 ENTRIES SKIPPED
+
+
+---- state2  =E=  state equation 2
+
+state2(1)..  (0)*ca(0) + (0)*ca(1) - (1)*cb(0) + (1)*cb(1) - (0.5)*k1(0) - (0.5)*k1(1) + (0)*k2(0) + (0)*k2(1) =E= 0 ; (LHS = 0)
+     
+state2(2)..  (0)*ca(1) + (0)*ca(2) - (1)*cb(1) + (1)*cb(2) - (0.5)*k1(1) - (0.5)*k1(2) + (0)*k2(1) + (0)*k2(2) =E= 0 ; (LHS = 0)
+     
+state2(3)..  (0)*ca(2) + (0)*ca(3) - (1)*cb(2) + (1)*cb(3) - (0.5)*k1(2) - (0.5)*k1(3) + (0)*k2(2) + (0)*k2(3) =E= 0 ; (LHS = 0)
+     
+REMAINING 97 ENTRIES SKIPPED
+
+
+---- ek1  =E=  
+
+ek1(0)..  - (1.11400078153142E-7)*t(0) + k1(0) =E= 0 ; (LHS = -5.39176378261206E-7, INFES = 5.39176378261206E-7 ****)
+     
+ek1(1)..  - (1.11400078153142E-7)*t(1) + k1(1) =E= 0 ; (LHS = -5.39176378261206E-7, INFES = 5.39176378261206E-7 ****)
+     
+ek1(2)..  - (1.11400078153142E-7)*t(2) + k1(2) =E= 0 ; (LHS = -5.39176378261206E-7, INFES = 5.39176378261206E-7 ****)
+     
+REMAINING 98 ENTRIES SKIPPED
+
+
+---- ek2  =E=  
+
+ek2(0)..  - (4.65498252743853E-15)*t(0) + k2(0) =E= 0 ; (LHS = 0)
+     
+ek2(1)..  - (4.65498252743853E-15)*t(1) + k2(1) =E= 0 ; (LHS = 0)
+     
+ek2(2)..  - (4.65498252743853E-15)*t(2) + k2(2) =E= 0 ; (LHS = 0)
+     
+REMAINING 98 ENTRIES SKIPPED
+
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 06/22/21 21:21:37 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE batchReactor Using NLP From line 68
+
+
+---- ca  concentration of component A
+
+ca(0)
+                (.LO, .L, .UP, .M = 1, 1, 1, 0)
+      (-1)      state1(1)
+       (0)      state2(1)
+
+ca(1)
+                (.LO, .L, .UP, .M = -INF, 1, +INF, 0)
+       (1)      state1(1)
+      (-1)      state1(2)
+       (0)      state2(1)
+       (0)      state2(2)
+
+ca(2)
+                (.LO, .L, .UP, .M = -INF, 1, +INF, 0)
+       (1)      state1(2)
+      (-1)      state1(3)
+       (0)      state2(2)
+       (0)      state2(3)
+
+REMAINING 98 ENTRIES SKIPPED
+
+---- cb  concentration of component B
+
+cb(0)
+                (.LO, .L, .UP, .M = 0, 0, 0, 0)
+      (-1)      state2(1)
+
+cb(1)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+       (1)      state2(1)
+      (-1)      state2(2)
+
+cb(2)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+       (1)      state2(2)
+      (-1)      state2(3)
+
+REMAINING 98 ENTRIES SKIPPED
+
+---- t  temperature of reactor (control variable)
+
+t(0)
+                (.LO, .L, .UP, .M = 110, 110, 280, 0)
+ (-1.114001E-7) ek1(0)
+ (-4.65498E-15) ek2(0)
+        0       (OLD LEVEL ****)
+
+t(1)
+                (.LO, .L, .UP, .M = 110, 110, 280, 0)
+ (-1.114001E-7) ek1(1)
+ (-4.65498E-15) ek2(1)
+        0       (OLD LEVEL ****)
+
+t(2)
+                (.LO, .L, .UP, .M = 110, 110, 280, 0)
+ (-1.114001E-7) ek1(2)
+ (-4.65498E-15) ek2(2)
+        0       (OLD LEVEL ****)
+
+REMAINING 98 ENTRIES SKIPPED
+
+---- k1  rate constant for the first reaction
+
+k1(0)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+       (0.5)    state1(1)
+      (-0.5)    state2(1)
+        1       ek1(0)
+
+k1(1)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+       (0.5)    state1(1)
+       (0.5)    state1(2)
+      (-0.5)    state2(1)
+      (-0.5)    state2(2)
+        1       ek1(1)
+
+k1(2)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+       (0.5)    state1(2)
+       (0.5)    state1(3)
+      (-0.5)    state2(2)
+      (-0.5)    state2(3)
+        1       ek1(2)
+
+REMAINING 98 ENTRIES SKIPPED
+
+---- k2  rate constant for the second reaction
+
+k2(0)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+       (0)      state2(1)
+        1       ek2(0)
+
+k2(1)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+       (0)      state2(1)
+       (0)      state2(2)
+        1       ek2(1)
+
+k2(2)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+       (0)      state2(2)
+       (0)      state2(3)
+        1       ek2(2)
+
+REMAINING 98 ENTRIES SKIPPED
+
+---- obj  criterion
+
+obj
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       eobj
+
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 06/22/21 21:21:37 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE batchReactor Using NLP From line 68
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           5     SINGLE EQUATIONS          403
+BLOCKS OF VARIABLES           6     SINGLE VARIABLES          506  101 projected
+NON ZERO ELEMENTS         1,606     NON LINEAR N-Z          1,402
+CODE LENGTH               5,119     CONSTANT POOL              20
+
+
+GENERATION TIME      =        0.563 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 06/22/21 21:21:37 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE batchReactor Using NLP From line 68
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   batchReactor        OBJECTIVE  obj
+     TYPE    NLP                 DIRECTION  MAXIMIZE
+     SOLVER  CONOPT              FROM LINE  68
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      2 Locally Optimal           
+**** OBJECTIVE VALUE                0.8558
+
+ RESOURCE USAGE, LIMIT          0.375 10000000000.000
+ ITERATION COUNT, LIMIT        25    2147483647
+ EVALUATION ERRORS              0             0
+--- *** This solver runs with a demo license. No commercial use.
+ 
+ 
+    C O N O P T 3   version 3.17L
+    Copyright (C)   ARKI Consulting and Development A/S
+                    Bagsvaerdvej 246 A
+                    DK-2880 Bagsvaerd, Denmark
+ 
+ 
+    The model has 506 variables and 403 constraints
+    with 1606 Jacobian elements, 1402 of which are nonlinear.
+    The Hessian of the Lagrangian has 202 elements on the diagonal,
+    202 elements below the diagonal, and 505 nonlinear variables.
+ 
+ ** Warning **  The value of LFITER is out of range.
+                LFITER is decreased from 2147483647 to 1000000000.
+ 
+ ** Warning **  The number of nonlinear derivatives equal to zero
+                in the initial point is large (= 24 percent).
+                A better initial point will probably help the
+                optimization.
+ 
+ 
+                   Pre-triangular equations:   0
+                   Post-triangular equations:  1
+                   Definitional equations:     202
+ 
+ 
+ ** Optimal solution. Reduced gradient less than tolerance.
+ 
+ 
+ CONOPT time Total                            0.124 seconds
+   of which: Function evaluations             0.040 = 32.3%
+             1st Derivative evaluations       0.042 = 33.9%
+             2nd Derivative evaluations       0.011 =  8.9%
+             Directional 2nd Derivative       0.000 =  0.0%
+ 
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU eobj                .              .              .             1.0000      
+
+  eobj  criterion definition
+
+---- EQU state1  state equation 1
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+1            .              .              .             0.9380      
+2            .              .              .             0.9332      
+3            .              .              .             0.9279      
+4            .              .              .             0.9219      
+5            .              .              .             0.9152      
+6            .              .              .             0.9079      
+7            .              .              .             0.8999      
+8            .              .              .             0.8913      
+9            .              .              .             0.8820      
+10           .              .              .             0.8722      
+11           .              .              .             0.8618      
+12           .              .              .             0.8508      
+13           .              .              .             0.8392      
+14           .              .              .             0.8271      
+15           .              .              .             0.8144      
+16           .              .              .             0.8011      
+17           .              .              .             0.7873      
+18           .              .              .             0.7729      
+19           .              .              .             0.7580      
+20           .              .              .             0.7425      
+21           .              .              .             0.7264      
+22           .              .              .             0.7099      
+23           .              .              .             0.6928      
+24           .              .              .             0.6751      
+25           .              .              .             0.6569      
+26           .              .              .             0.6382      
+27           .              .              .             0.6190      
+28           .              .              .             0.5992      
+29           .              .              .             0.5789      
+30           .              .              .             0.5580      
+31           .              .              .             0.5367      
+32           .              .              .             0.5148      
+33           .              .              .             0.4924      
+34           .              .              .             0.4694      
+35           .              .              .             0.4460      
+36           .              .              .             0.4220      
+37           .              .              .             0.3975      
+38           .              .              .             0.3724      
+39           .              .              .             0.3469      
+40           .              .              .             0.3208      
+41           .              .              .             0.2942      
+42           .              .              .             0.2671      
+43           .              .              .             0.2395      
+44           .              .              .             0.2114      
+45           .              .              .             0.1827      
+46           .              .              .             0.1535      
+47           .              .              .             0.1239      
+48           .              .              .             0.0937      
+49           .              .              .             0.0630      
+50           .              .              .             0.0317      
+51           .              .              .       5.4432992E-6      
+52           .              .              .       5.3333337E-6      
+53           .              .              .       5.2233682E-6      
+54           .              .              .       5.1134027E-6      
+55           .              .              .       5.0034372E-6      
+56           .              .              .       4.8934717E-6      
+57           .              .              .       4.7835062E-6      
+58           .              .              .       4.6735406E-6      
+59           .              .              .       4.5635751E-6      
+60           .              .              .       4.4536095E-6      
+61           .              .              .       4.3436440E-6      
+62           .              .              .       4.2336784E-6      
+63           .              .              .       4.1237129E-6      
+64           .              .              .       4.0137473E-6      
+65           .              .              .       3.9037817E-6      
+66           .              .              .       3.7938162E-6      
+67           .              .              .       3.6838506E-6      
+68           .              .              .       3.5738850E-6      
+69           .              .              .       3.4639194E-6      
+70           .              .              .       3.3539538E-6      
+71           .              .              .       3.2439882E-6      
+72           .              .              .       3.1340226E-6      
+73           .              .              .       3.0240569E-6      
+74           .              .              .       2.9140913E-6      
+75           .              .              .       2.8041257E-6      
+76           .              .              .       2.6941600E-6      
+77           .              .              .       2.5841944E-6      
+78           .              .              .       2.4742287E-6      
+79           .              .              .       2.3642631E-6      
+80           .              .              .       2.2542974E-6      
+81           .              .              .       2.1443318E-6      
+82           .              .              .       2.0343661E-6      
+83           .              .              .       1.9244004E-6      
+84           .              .              .       1.8144347E-6      
+85           .              .              .       1.7044690E-6      
+86           .              .              .       1.5945033E-6      
+87           .              .              .       1.4845376E-6      
+88           .              .              .       1.3745719E-6      
+89           .              .              .       1.2646062E-6      
+90           .              .              .       1.1546405E-6      
+91           .              .              .       1.0446747E-6      
+92           .              .              .       9.3470900E-7      
+93           .              .              .       8.2474326E-7      
+94           .              .              .       7.1477751E-7      
+95           .              .              .       6.0481175E-7      
+96           .              .              .       4.9484599E-7      
+97           .              .              .       3.8488023E-7      
+98           .              .              .       2.7491445E-7      
+99           .              .              .       1.6494868E-7      
+100          .              .              .             EPS         
+
+---- EQU state2  state equation 2
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+1            .              .              .             0.9389      
+2            .              .              .             0.9456      
+3            .              .              .             0.9480      
+4            .              .              .             0.9499      
+5            .              .              .             0.9515      
+6            .              .              .             0.9530      
+7            .              .              .             0.9544      
+8            .              .              .             0.9557      
+9            .              .              .             0.9570      
+10           .              .              .             0.9583      
+11           .              .              .             0.9595      
+12           .              .              .             0.9607      
+13           .              .              .             0.9618      
+14           .              .              .             0.9630      
+15           .              .              .             0.9641      
+16           .              .              .             0.9652      
+17           .              .              .             0.9663      
+18           .              .              .             0.9673      
+19           .              .              .             0.9684      
+20           .              .              .             0.9695      
+21           .              .              .             0.9705      
+22           .              .              .             0.9715      
+23           .              .              .             0.9726      
+24           .              .              .             0.9736      
+25           .              .              .             0.9746      
+26           .              .              .             0.9756      
+27           .              .              .             0.9767      
+28           .              .              .             0.9777      
+29           .              .              .             0.9787      
+30           .              .              .             0.9797      
+31           .              .              .             0.9806      
+32           .              .              .             0.9816      
+33           .              .              .             0.9826      
+34           .              .              .             0.9836      
+35           .              .              .             0.9846      
+36           .              .              .             0.9856      
+37           .              .              .             0.9865      
+38           .              .              .             0.9875      
+39           .              .              .             0.9885      
+40           .              .              .             0.9894      
+41           .              .              .             0.9904      
+42           .              .              .             0.9914      
+43           .              .              .             0.9923      
+44           .              .              .             0.9933      
+45           .              .              .             0.9943      
+46           .              .              .             0.9952      
+47           .              .              .             0.9962      
+48           .              .              .             0.9971      
+49           .              .              .             0.9981      
+50           .              .              .             0.9990      
+51           .              .              .             1.0000      
+52           .              .              .             1.0000      
+53           .              .              .             1.0000      
+54           .              .              .             1.0000      
+55           .              .              .             1.0000      
+56           .              .              .             1.0000      
+57           .              .              .             1.0000      
+58           .              .              .             1.0000      
+59           .              .              .             1.0000      
+60           .              .              .             1.0000      
+61           .              .              .             1.0000      
+62           .              .              .             1.0000      
+63           .              .              .             1.0000      
+64           .              .              .             1.0000      
+65           .              .              .             1.0000      
+66           .              .              .             1.0000      
+67           .              .              .             1.0000      
+68           .              .              .             1.0000      
+69           .              .              .             1.0000      
+70           .              .              .             1.0000      
+71           .              .              .             1.0000      
+72           .              .              .             1.0000      
+73           .              .              .             1.0000      
+74           .              .              .             1.0000      
+75           .              .              .             1.0000      
+76           .              .              .             1.0000      
+77           .              .              .             1.0000      
+78           .              .              .             1.0000      
+79           .              .              .             1.0000      
+80           .              .              .             1.0000      
+81           .              .              .             1.0000      
+82           .              .              .             1.0000      
+83           .              .              .             1.0000      
+84           .              .              .             1.0000      
+85           .              .              .             1.0000      
+86           .              .              .             1.0000      
+87           .              .              .             1.0000      
+88           .              .              .             1.0000      
+89           .              .              .             1.0000      
+90           .              .              .             1.0000      
+91           .              .              .             1.0000      
+92           .              .              .             1.0000      
+93           .              .              .             1.0000      
+94           .              .              .             1.0000      
+95           .              .              .             1.0000      
+96           .              .              .             1.0000      
+97           .              .              .             1.0000      
+98           .              .              .             1.0000      
+99           .              .              .             1.0000      
+100          .              .              .             1.0000      
+
+---- EQU ek1  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+0            .              .              .             0.0005      
+1            .              .              .             0.0048      
+2            .              .              .             0.0067      
+3            .              .              .             0.0074      
+4            .              .              .             0.0078      
+5            .              .              .             0.0082      
+6            .              .              .             0.0084      
+7            .              .              .             0.0086      
+8            .              .              .             0.0088      
+9            .              .              .             0.0090      
+10           .              .              .             0.0091      
+11           .              .              .             0.0092      
+12           .              .              .             0.0093      
+13           .              .              .             0.0094      
+14           .              .              .             0.0094      
+15           .              .              .             0.0095      
+16           .              .              .             0.0096      
+17           .              .              .             0.0096      
+18           .              .              .             0.0097      
+19           .              .              .             0.0097      
+20           .              .              .             0.0098      
+21           .              .              .             0.0098      
+22           .              .              .             0.0099      
+23           .              .              .             0.0099      
+24           .              .              .             0.0099      
+25           .              .              .             0.0100      
+26           .              .              .             0.0100      
+27           .              .              .             0.0100      
+28           .              .              .             0.0100      
+29           .              .              .             0.0101      
+30           .              .              .             0.0101      
+31           .              .              .             0.0101      
+32           .              .              .             0.0101      
+33           .              .              .             0.0102      
+34           .              .              .             0.0102      
+35           .              .              .             0.0102      
+36           .              .              .             0.0102      
+37           .              .              .             0.0102      
+38           .              .              .             0.0102      
+39           .              .              .             0.0103      
+40           .              .              .             0.0103      
+41           .              .              .             0.0103      
+42           .              .              .             0.0103      
+43           .              .              .             0.0103      
+44           .              .              .             0.0103      
+45           .              .              .             0.0103      
+46           .              .              .             0.0104      
+47           .              .              .             0.0104      
+48           .              .              .             0.0104      
+49           .              .              .             0.0104      
+50           .              .              .             0.0104      
+51           .              .              .             0.0104      
+52           .              .              .             0.0104      
+53           .              .              .             0.0104      
+54           .              .              .             0.0104      
+55           .              .              .             0.0104      
+56           .              .              .             0.0104      
+57           .              .              .             0.0104      
+58           .              .              .             0.0104      
+59           .              .              .             0.0104      
+60           .              .              .             0.0104      
+61           .              .              .             0.0104      
+62           .              .              .             0.0104      
+63           .              .              .             0.0104      
+64           .              .              .             0.0104      
+65           .              .              .             0.0104      
+66           .              .              .             0.0104      
+67           .              .              .             0.0104      
+68           .              .              .             0.0104      
+69           .              .              .             0.0104      
+70           .              .              .             0.0104      
+71           .              .              .             0.0104      
+72           .              .              .             0.0104      
+73           .              .              .             0.0104      
+74           .              .              .             0.0104      
+75           .              .              .             0.0104      
+76           .              .              .             0.0104      
+77           .              .              .             0.0104      
+78           .              .              .             0.0104      
+79           .              .              .             0.0104      
+80           .              .              .             0.0104      
+81           .              .              .             0.0104      
+82           .              .              .             0.0104      
+83           .              .              .             0.0104      
+84           .              .              .             0.0104      
+85           .              .              .             0.0104      
+86           .              .              .             0.0104      
+87           .              .              .             0.0104      
+88           .              .              .             0.0104      
+89           .              .              .             0.0104      
+90           .              .              .             0.0104      
+91           .              .              .             0.0104      
+92           .              .              .             0.0104      
+93           .              .              .             0.0104      
+94           .              .              .             0.0104      
+95           .              .              .             0.0104      
+96           .              .              .             0.0104      
+97           .              .              .             0.0104      
+98           .              .              .             0.0104      
+99           .              .              .             0.0104      
+100          .              .              .             0.0052      
+
+---- EQU ek2  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+0            .              .              .             EPS         
+1            .              .              .            -0.1439      
+2            .              .              .            -0.3382      
+3            .              .              .            -0.4207      
+4            .              .              .            -0.4781      
+5            .              .              .            -0.5219      
+6            .              .              .            -0.5569      
+7            .              .              .            -0.5858      
+8            .              .              .            -0.6102      
+9            .              .              .            -0.6311      
+10           .              .              .            -0.6494      
+11           .              .              .            -0.6655      
+12           .              .              .            -0.6799      
+13           .              .              .            -0.6927      
+14           .              .              .            -0.7043      
+15           .              .              .            -0.7148      
+16           .              .              .            -0.7245      
+17           .              .              .            -0.7333      
+18           .              .              .            -0.7414      
+19           .              .              .            -0.7489      
+20           .              .              .            -0.7559      
+21           .              .              .            -0.7624      
+22           .              .              .            -0.7685      
+23           .              .              .            -0.7742      
+24           .              .              .            -0.7795      
+25           .              .              .            -0.7845      
+26           .              .              .            -0.7892      
+27           .              .              .            -0.7937      
+28           .              .              .            -0.7979      
+29           .              .              .            -0.8019      
+30           .              .              .            -0.8057      
+31           .              .              .            -0.8093      
+32           .              .              .            -0.8127      
+33           .              .              .            -0.8160      
+34           .              .              .            -0.8191      
+35           .              .              .            -0.8221      
+36           .              .              .            -0.8249      
+37           .              .              .            -0.8277      
+38           .              .              .            -0.8303      
+39           .              .              .            -0.8328      
+40           .              .              .            -0.8352      
+41           .              .              .            -0.8375      
+42           .              .              .            -0.8398      
+43           .              .              .            -0.8419      
+44           .              .              .            -0.8440      
+45           .              .              .            -0.8460      
+46           .              .              .            -0.8479      
+47           .              .              .            -0.8498      
+48           .              .              .            -0.8516      
+49           .              .              .            -0.8533      
+50           .              .              .            -0.8550      
+51           .              .              .            -0.8558      
+52           .              .              .            -0.8558      
+53           .              .              .            -0.8558      
+54           .              .              .            -0.8558      
+55           .              .              .            -0.8558      
+56           .              .              .            -0.8558      
+57           .              .              .            -0.8558      
+58           .              .              .            -0.8558      
+59           .              .              .            -0.8558      
+60           .              .              .            -0.8558      
+61           .              .              .            -0.8558      
+62           .              .              .            -0.8558      
+63           .              .              .            -0.8558      
+64           .              .              .            -0.8558      
+65           .              .              .            -0.8558      
+66           .              .              .            -0.8558      
+67           .              .              .            -0.8558      
+68           .              .              .            -0.8558      
+69           .              .              .            -0.8558      
+70           .              .              .            -0.8558      
+71           .              .              .            -0.8558      
+72           .              .              .            -0.8558      
+73           .              .              .            -0.8558      
+74           .              .              .            -0.8558      
+75           .              .              .            -0.8558      
+76           .              .              .            -0.8558      
+77           .              .              .            -0.8558      
+78           .              .              .            -0.8558      
+79           .              .              .            -0.8558      
+80           .              .              .            -0.8558      
+81           .              .              .            -0.8558      
+82           .              .              .            -0.8558      
+83           .              .              .            -0.8558      
+84           .              .              .            -0.8558      
+85           .              .              .            -0.8558      
+86           .              .              .            -0.8558      
+87           .              .              .            -0.8558      
+88           .              .              .            -0.8558      
+89           .              .              .            -0.8558      
+90           .              .              .            -0.8558      
+91           .              .              .            -0.8558      
+92           .              .              .            -0.8558      
+93           .              .              .            -0.8558      
+94           .              .              .            -0.8558      
+95           .              .              .            -0.8558      
+96           .              .              .            -0.8558      
+97           .              .              .            -0.8558      
+98           .              .              .            -0.8558      
+99           .              .              .            -0.8558      
+100          .              .              .            -0.4279      
+
+---- VAR ca  concentration of component A
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+0           1.0000         1.0000         1.0000         0.9380      
+1          -INF            0.8468        +INF             .          
+2          -INF            0.6413        +INF             .          
+3          -INF            0.5543        +INF             .          
+4          -INF            0.4938        +INF             .          
+5          -INF            0.4478        +INF             .          
+6          -INF            0.4111        +INF             .          
+7          -INF            0.3808        +INF             .          
+8          -INF            0.3553        +INF             .          
+9          -INF            0.3334        +INF             .          
+10         -INF            0.3143        +INF             .          
+11         -INF            0.2975        +INF             .          
+12         -INF            0.2826        +INF             .          
+13         -INF            0.2692        +INF             .          
+14         -INF            0.2572        +INF             .          
+15         -INF            0.2462        +INF             .          
+16         -INF            0.2363        +INF             .          
+17         -INF            0.2271        +INF             .          
+18         -INF            0.2187        +INF             .          
+19         -INF            0.2110        +INF             .          
+20         -INF            0.2038        +INF             .          
+21         -INF            0.1971        +INF             .          
+22         -INF            0.1908        +INF             .          
+23         -INF            0.1850        +INF             .          
+24         -INF            0.1795        +INF             .          
+25         -INF            0.1744        +INF             .          
+26         -INF            0.1695        +INF             .          
+27         -INF            0.1650        +INF             .          
+28         -INF            0.1607        +INF             .          
+29         -INF            0.1566        +INF             .          
+30         -INF            0.1527        +INF             .          
+31         -INF            0.1490        +INF             .          
+32         -INF            0.1455        +INF             .          
+33         -INF            0.1422        +INF             .          
+34         -INF            0.1390        +INF             .          
+35         -INF            0.1360        +INF             .          
+36         -INF            0.1331        +INF             .          
+37         -INF            0.1303        +INF             .          
+38         -INF            0.1277        +INF             .          
+39         -INF            0.1252        +INF             .          
+40         -INF            0.1227        +INF             .          
+41         -INF            0.1204        +INF             .          
+42         -INF            0.1181        +INF             .          
+43         -INF            0.1159        +INF             .          
+44         -INF            0.1139        +INF             .          
+45         -INF            0.1118        +INF             .          
+46         -INF            0.1099        +INF             .          
+47         -INF            0.1080        +INF             .          
+48         -INF            0.1062        +INF             .          
+49         -INF            0.1045        +INF             .          
+50         -INF            0.1028        +INF             .          
+51         -INF            0.1020        +INF             .          
+52         -INF            0.1020        +INF             .          
+53         -INF            0.1020        +INF             .          
+54         -INF            0.1020        +INF             .          
+55         -INF            0.1020        +INF             .          
+56         -INF            0.1020        +INF             .          
+57         -INF            0.1020        +INF             .          
+58         -INF            0.1020        +INF             .          
+59         -INF            0.1020        +INF             .          
+60         -INF            0.1020        +INF             .          
+61         -INF            0.1020        +INF             .          
+62         -INF            0.1020        +INF             .          
+63         -INF            0.1020        +INF             .          
+64         -INF            0.1020        +INF             .          
+65         -INF            0.1020        +INF             .          
+66         -INF            0.1020        +INF             .          
+67         -INF            0.1020        +INF             .          
+68         -INF            0.1020        +INF             .          
+69         -INF            0.1020        +INF             .          
+70         -INF            0.1020        +INF             .          
+71         -INF            0.1020        +INF             .          
+72         -INF            0.1020        +INF             .          
+73         -INF            0.1020        +INF             .          
+74         -INF            0.1020        +INF             .          
+75         -INF            0.1020        +INF             .          
+76         -INF            0.1020        +INF             .          
+77         -INF            0.1020        +INF             .          
+78         -INF            0.1020        +INF             .          
+79         -INF            0.1020        +INF             .          
+80         -INF            0.1020        +INF             .          
+81         -INF            0.1020        +INF             .          
+82         -INF            0.1020        +INF             .          
+83         -INF            0.1020        +INF             .          
+84         -INF            0.1020        +INF             .          
+85         -INF            0.1020        +INF             .          
+86         -INF            0.1020        +INF             .          
+87         -INF            0.1020        +INF             .          
+88         -INF            0.1020        +INF             .          
+89         -INF            0.1020        +INF             .          
+90         -INF            0.1020        +INF             .          
+91         -INF            0.1020        +INF             .          
+92         -INF            0.1020        +INF             .          
+93         -INF            0.1020        +INF             .          
+94         -INF            0.1020        +INF             .          
+95         -INF            0.1020        +INF             .          
+96         -INF            0.1020        +INF             .          
+97         -INF            0.1020        +INF             .          
+98         -INF            0.1020        +INF             .          
+99         -INF            0.1020        +INF             .          
+100        -INF            0.1020        +INF             .          
+
+---- VAR cb  concentration of component B
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+0            .              .              .             0.9389      
+1          -INF            0.1527        +INF             .          
+2          -INF            0.3572        +INF             .          
+3          -INF            0.4433        +INF             .          
+4          -INF            0.5029        +INF             .          
+5          -INF            0.5481        +INF             .          
+6          -INF            0.5839        +INF             .          
+7          -INF            0.6133        +INF             .          
+8          -INF            0.6380        +INF             .          
+9          -INF            0.6591        +INF             .          
+10         -INF            0.6773        +INF             .          
+11         -INF            0.6932        +INF             .          
+12         -INF            0.7073        +INF             .          
+13         -INF            0.7198        +INF             .          
+14         -INF            0.7310        +INF             .          
+15         -INF            0.7411        +INF             .          
+16         -INF            0.7502        +INF             .          
+17         -INF            0.7585        +INF             .          
+18         -INF            0.7660        +INF             .          
+19         -INF            0.7730        +INF             .          
+20         -INF            0.7793        +INF             .          
+21         -INF            0.7852        +INF             .          
+22         -INF            0.7906        +INF             .          
+23         -INF            0.7956        +INF             .          
+24         -INF            0.8002        +INF             .          
+25         -INF            0.8045        +INF             .          
+26         -INF            0.8085        +INF             .          
+27         -INF            0.8122        +INF             .          
+28         -INF            0.8157        +INF             .          
+29         -INF            0.8190        +INF             .          
+30         -INF            0.8220        +INF             .          
+31         -INF            0.8248        +INF             .          
+32         -INF            0.8275        +INF             .          
+33         -INF            0.8300        +INF             .          
+34         -INF            0.8323        +INF             .          
+35         -INF            0.8346        +INF             .          
+36         -INF            0.8366        +INF             .          
+37         -INF            0.8386        +INF             .          
+38         -INF            0.8404        +INF             .          
+39         -INF            0.8421        +INF             .          
+40         -INF            0.8437        +INF             .          
+41         -INF            0.8452        +INF             .          
+42         -INF            0.8467        +INF             .          
+43         -INF            0.8480        +INF             .          
+44         -INF            0.8493        +INF             .          
+45         -INF            0.8505        +INF             .          
+46         -INF            0.8516        +INF             .          
+47         -INF            0.8526        +INF             .          
+48         -INF            0.8536        +INF             .          
+49         -INF            0.8546        +INF             .          
+50         -INF            0.8554        +INF             .          
+51         -INF            0.8558        +INF             .          
+52         -INF            0.8558        +INF             .          
+53         -INF            0.8558        +INF             .          
+54         -INF            0.8558        +INF             .          
+55         -INF            0.8558        +INF             .          
+56         -INF            0.8558        +INF             .          
+57         -INF            0.8558        +INF             .          
+58         -INF            0.8558        +INF             .          
+59         -INF            0.8558        +INF             .          
+60         -INF            0.8558        +INF             .          
+61         -INF            0.8558        +INF             .          
+62         -INF            0.8558        +INF             .          
+63         -INF            0.8558        +INF             .          
+64         -INF            0.8558        +INF             .          
+65         -INF            0.8558        +INF             .          
+66         -INF            0.8558        +INF             .          
+67         -INF            0.8558        +INF             .          
+68         -INF            0.8558        +INF             .          
+69         -INF            0.8558        +INF             .          
+70         -INF            0.8558        +INF             .          
+71         -INF            0.8558        +INF             .          
+72         -INF            0.8558        +INF             .          
+73         -INF            0.8558        +INF             .          
+74         -INF            0.8558        +INF             .          
+75         -INF            0.8558        +INF             .          
+76         -INF            0.8558        +INF             .          
+77         -INF            0.8558        +INF             .          
+78         -INF            0.8558        +INF             .          
+79         -INF            0.8558        +INF             .          
+80         -INF            0.8558        +INF             .          
+81         -INF            0.8558        +INF             .          
+82         -INF            0.8558        +INF             .          
+83         -INF            0.8558        +INF             .          
+84         -INF            0.8558        +INF             .          
+85         -INF            0.8558        +INF             .          
+86         -INF            0.8558        +INF             .          
+87         -INF            0.8558        +INF             .          
+88         -INF            0.8558        +INF             .          
+89         -INF            0.8558        +INF             .          
+90         -INF            0.8558        +INF             .          
+91         -INF            0.8558        +INF             .          
+92         -INF            0.8558        +INF             .          
+93         -INF            0.8558        +INF             .          
+94         -INF            0.8558        +INF             .          
+95         -INF            0.8558        +INF             .          
+96         -INF            0.8558        +INF             .          
+97         -INF            0.8558        +INF             .          
+98         -INF            0.8558        +INF             .          
+99         -INF            0.8558        +INF             .          
+100        -INF            0.8558        +INF             .          
+
+---- VAR t  temperature of reactor (control variable)
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+0         110.0000       110.0000       280.0000         EPS         
+1         110.0000       273.3943       280.0000   -1.44140E-10      
+2         110.0000       258.7211       280.0000          .          
+3         110.0000       255.5955       280.0000   3.358891E-11      
+4         110.0000       253.8400       280.0000   -7.40813E-11      
+5         110.0000       252.6669       280.0000   -5.79968E-11      
+6         110.0000       251.8108       280.0000   1.273176E-10      
+7         110.0000       251.1510       280.0000   2.790090E-11      
+8         110.0000       250.6231       280.0000   1.557066E-11      
+9         110.0000       250.1890       280.0000   1.855578E-11      
+10        110.0000       249.8242       280.0000   -4.29330E-11      
+11        110.0000       249.5127       280.0000   -4.11812E-11      
+12        110.0000       249.2428       280.0000   -1.20340E-11      
+13        110.0000       249.0064       280.0000   1.419514E-11      
+14        110.0000       248.7973       280.0000   2.023135E-11      
+15        110.0000       248.6108       280.0000         EPS         
+16        110.0000       248.4433       280.0000   -1.54598E-11      
+17        110.0000       248.2919       280.0000   -2.74293E-11      
+18        110.0000       248.1543       280.0000   -2.97458E-11      
+19        110.0000       248.0285       280.0000   -3.14181E-11      
+20        110.0000       247.9132       280.0000   -4.00835E-11      
+21        110.0000       247.8069       280.0000   -5.46395E-11      
+22        110.0000       247.7085       280.0000   -6.57189E-11      
+23        110.0000       247.6174       280.0000   -2.13055E-10      
+24        110.0000       247.5323       280.0000   2.471398E-10      
+25        110.0000       247.4530       280.0000   4.387281E-10      
+26        110.0000       247.3790       280.0000   1.516302E-10      
+27        110.0000       247.3096       280.0000   -2.13870E-10      
+28        110.0000       247.2443       280.0000   -3.75462E-10      
+29        110.0000       247.1827       280.0000   -2.82305E-10      
+30        110.0000       247.1245       280.0000   -3.57703E-11      
+31        110.0000       247.0695       280.0000   2.147052E-10      
+32        110.0000       247.0174       280.0000   3.474972E-10      
+33        110.0000       246.9680       280.0000   3.092005E-10      
+34        110.0000       246.9212       280.0000   1.272989E-10      
+35        110.0000       246.8767       280.0000   -9.47245E-11      
+36        110.0000       246.8342       280.0000   -1.91471E-10      
+37        110.0000       246.7936       280.0000   2.693354E-11      
+38        110.0000       246.7548       280.0000   3.008004E-11      
+39        110.0000       246.7178       280.0000   3.225548E-11      
+40        110.0000       246.6823       280.0000   3.360196E-11      
+41        110.0000       246.6484       280.0000   3.424290E-11      
+42        110.0000       246.6158       280.0000   3.428551E-11      
+43        110.0000       246.5845       280.0000   3.382289E-11      
+44        110.0000       246.5544       280.0000   3.293591E-11      
+45        110.0000       246.5255       280.0000   3.169481E-11      
+46        110.0000       246.4977       280.0000   3.016055E-11      
+47        110.0000       246.4709       280.0000   2.838600E-11      
+48        110.0000       246.4450       280.0000   2.641697E-11      
+49        110.0000       246.4201       280.0000   2.429310E-11      
+50        110.0000       246.3960       280.0000   2.204860E-11      
+51        110.0000       110.0000       280.0000   1.1584505E-9      
+52        110.0000       110.0000       280.0000   1.1584505E-9      
+53        110.0000       110.0000       280.0000   1.1584505E-9      
+54        110.0000       110.0000       280.0000   1.1584505E-9      
+55        110.0000       110.0000       280.0000   1.1584505E-9      
+56        110.0000       110.0000       280.0000   1.1584505E-9      
+57        110.0000       110.0000       280.0000   1.1584505E-9      
+58        110.0000       110.0000       280.0000   1.1584505E-9      
+59        110.0000       110.0000       280.0000   1.1584505E-9      
+60        110.0000       110.0000       280.0000   1.1584505E-9      
+61        110.0000       110.0000       280.0000   1.1584505E-9      
+62        110.0000       110.0000       280.0000   1.1584505E-9      
+63        110.0000       110.0000       280.0000   1.1584505E-9      
+64        110.0000       110.0000       280.0000   1.1584505E-9      
+65        110.0000       110.0000       280.0000         EPS         
+66        110.0000       110.0000       280.0000         EPS         
+67        110.0000       110.0000       280.0000         EPS         
+68        110.0000       110.0000       280.0000         EPS         
+69        110.0000       110.0000       280.0000         EPS         
+70        110.0000       110.0000       280.0000         EPS         
+71        110.0000       110.0000       280.0000         EPS         
+72        110.0000       110.0000       280.0000         EPS         
+73        110.0000       110.0000       280.0000         EPS         
+74        110.0000       110.0000       280.0000         EPS         
+75        110.0000       110.0000       280.0000         EPS         
+76        110.0000       110.0000       280.0000         EPS         
+77        110.0000       110.0000       280.0000         EPS         
+78        110.0000       110.0000       280.0000         EPS         
+79        110.0000       110.0000       280.0000         EPS         
+80        110.0000       110.0000       280.0000         EPS         
+81        110.0000       110.0000       280.0000         EPS         
+82        110.0000       110.0000       280.0000         EPS         
+83        110.0000       110.0000       280.0000         EPS         
+84        110.0000       110.0000       280.0000         EPS         
+85        110.0000       110.0000       280.0000         EPS         
+86        110.0000       110.0000       280.0000         EPS         
+87        110.0000       110.0000       280.0000         EPS         
+88        110.0000       110.0000       280.0000         EPS         
+89        110.0000       110.0000       280.0000         EPS         
+90        110.0000       110.0000       280.0000         EPS         
+91        110.0000       110.0000       280.0000         EPS         
+92        110.0000       110.0000       280.0000         EPS         
+93        110.0000       110.0000       280.0000         EPS         
+94        110.0000       110.0000       280.0000         EPS         
+95        110.0000       110.0000       280.0000         EPS         
+96        110.0000       110.0000       280.0000         EPS         
+97        110.0000       110.0000       280.0000         EPS         
+98        110.0000       110.0000       280.0000         EPS         
+99        110.0000       110.0000       280.0000         EPS         
+100       110.0000       110.0000       280.0000         EPS         
+
+---- VAR k1  rate constant for the first reaction
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+0          -INF      5.3917638E-7        +INF             .          
+1          -INF            0.4273        +INF             .          
+2          -INF            0.2544        +INF            EPS         
+3          -INF            0.2260        +INF             .          
+4          -INF            0.2113        +INF             .          
+5          -INF            0.2018        +INF             .          
+6          -INF            0.1951        +INF             .          
+7          -INF            0.1901        +INF             .          
+8          -INF            0.1862        +INF             .          
+9          -INF            0.1830        +INF             .          
+10         -INF            0.1803        +INF             .          
+11         -INF            0.1781        +INF             .          
+12         -INF            0.1762        +INF             .          
+13         -INF            0.1745        +INF             .          
+14         -INF            0.1730        +INF             .          
+15         -INF            0.1717        +INF             .          
+16         -INF            0.1706        +INF             .          
+17         -INF            0.1695        +INF             .          
+18         -INF            0.1686        +INF             .          
+19         -INF            0.1677        +INF             .          
+20         -INF            0.1669        +INF             .          
+21         -INF            0.1662        +INF             .          
+22         -INF            0.1656        +INF             .          
+23         -INF            0.1649        +INF             .          
+24         -INF            0.1644        +INF             .          
+25         -INF            0.1638        +INF             .          
+26         -INF            0.1633        +INF             .          
+27         -INF            0.1629        +INF             .          
+28         -INF            0.1624        +INF             .          
+29         -INF            0.1620        +INF             .          
+30         -INF            0.1617        +INF             .          
+31         -INF            0.1613        +INF             .          
+32         -INF            0.1609        +INF             .          
+33         -INF            0.1606        +INF             .          
+34         -INF            0.1603        +INF             .          
+35         -INF            0.1600        +INF             .          
+36         -INF            0.1597        +INF             .          
+37         -INF            0.1595        +INF             .          
+38         -INF            0.1592        +INF             .          
+39         -INF            0.1590        +INF             .          
+40         -INF            0.1587        +INF             .          
+41         -INF            0.1585        +INF             .          
+42         -INF            0.1583        +INF             .          
+43         -INF            0.1581        +INF             .          
+44         -INF            0.1579        +INF             .          
+45         -INF            0.1577        +INF             .          
+46         -INF            0.1575        +INF             .          
+47         -INF            0.1574        +INF             .          
+48         -INF            0.1572        +INF             .          
+49         -INF            0.1570        +INF             .          
+50         -INF            0.1569        +INF             .          
+51         -INF      5.3917638E-7        +INF             .          
+52         -INF      5.3917638E-7        +INF             .          
+53         -INF      5.3917638E-7        +INF             .          
+54         -INF      5.3917638E-7        +INF             .          
+55         -INF      5.3917638E-7        +INF             .          
+56         -INF      5.3917638E-7        +INF             .          
+57         -INF      5.3917638E-7        +INF             .          
+58         -INF      5.3917638E-7        +INF             .          
+59         -INF      5.3917638E-7        +INF             .          
+60         -INF      5.3917638E-7        +INF             .          
+61         -INF      5.3917638E-7        +INF             .          
+62         -INF      5.3917638E-7        +INF             .          
+63         -INF      5.3917638E-7        +INF             .          
+64         -INF      5.3917638E-7        +INF             .          
+65         -INF      5.3917638E-7        +INF             .          
+66         -INF      5.3917638E-7        +INF             .          
+67         -INF      5.3917638E-7        +INF             .          
+68         -INF      5.3917638E-7        +INF             .          
+69         -INF      5.3917638E-7        +INF             .          
+70         -INF      5.3917638E-7        +INF             .          
+71         -INF      5.3917638E-7        +INF             .          
+72         -INF      5.3917638E-7        +INF             .          
+73         -INF      5.3917638E-7        +INF             .          
+74         -INF      5.3917638E-7        +INF             .          
+75         -INF      5.3917638E-7        +INF             .          
+76         -INF      5.3917638E-7        +INF             .          
+77         -INF      5.3917638E-7        +INF             .          
+78         -INF      5.3917638E-7        +INF             .          
+79         -INF      5.3917638E-7        +INF             .          
+80         -INF      5.3917638E-7        +INF             .          
+81         -INF      5.3917638E-7        +INF             .          
+82         -INF      5.3917638E-7        +INF             .          
+83         -INF      5.3917638E-7        +INF             .          
+84         -INF      5.3917638E-7        +INF             .          
+85         -INF      5.3917638E-7        +INF             .          
+86         -INF      5.3917638E-7        +INF             .          
+87         -INF      5.3917638E-7        +INF             .          
+88         -INF      5.3917638E-7        +INF             .          
+89         -INF      5.3917638E-7        +INF             .          
+90         -INF      5.3917638E-7        +INF             .          
+91         -INF      5.3917638E-7        +INF             .          
+92         -INF      5.3917638E-7        +INF             .          
+93         -INF      5.3917638E-7        +INF             .          
+94         -INF      5.3917638E-7        +INF             .          
+95         -INF      5.3917638E-7        +INF             .          
+96         -INF      5.3917638E-7        +INF             .          
+97         -INF      5.3917638E-7        +INF             .          
+98         -INF      5.3917638E-7        +INF             .          
+99         -INF      5.3917638E-7        +INF             .          
+100        -INF      5.3917638E-7        +INF             .          
+
+---- VAR k2  rate constant for the second reaction
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+0          -INF      1.126506E-14        +INF             .          
+1          -INF            0.0071        +INF             .          
+2          -INF            0.0025        +INF             .          
+3          -INF            0.0020        +INF             .          
+4          -INF            0.0017        +INF             .          
+5          -INF            0.0016        +INF             .          
+6          -INF            0.0015        +INF             .          
+7          -INF            0.0014        +INF             .          
+8          -INF            0.0013        +INF             .          
+9          -INF            0.0013        +INF             .          
+10         -INF            0.0013        +INF             .          
+11         -INF            0.0012        +INF             .          
+12         -INF            0.0012        +INF             .          
+13         -INF            0.0012        +INF             .          
+14         -INF            0.0012        +INF             .          
+15         -INF            0.0011        +INF             .          
+16         -INF            0.0011        +INF             .          
+17         -INF            0.0011        +INF             .          
+18         -INF            0.0011        +INF             .          
+19         -INF            0.0011        +INF             .          
+20         -INF            0.0011        +INF             .          
+21         -INF            0.0011        +INF             .          
+22         -INF            0.0011        +INF             .          
+23         -INF            0.0011        +INF             .          
+24         -INF            0.0010        +INF             .          
+25         -INF            0.0010        +INF             .          
+26         -INF            0.0010        +INF             .          
+27         -INF            0.0010        +INF             .          
+28         -INF            0.0010        +INF             .          
+29         -INF            0.0010        +INF             .          
+30         -INF            0.0010        +INF             .          
+31         -INF            0.0010        +INF             .          
+32         -INF            0.0010        +INF             .          
+33         -INF            0.0010        +INF             .          
+34         -INF            0.0010        +INF             .          
+35         -INF            0.0010        +INF             .          
+36         -INF            0.0010        +INF             .          
+37         -INF            0.0010        +INF             .          
+38         -INF            0.0010        +INF             .          
+39         -INF            0.0010        +INF             .          
+40         -INF            0.0010        +INF             .          
+41         -INF            0.0010        +INF             .          
+42         -INF            0.0010        +INF             .          
+43         -INF            0.0010        +INF             .          
+44         -INF            0.0010        +INF             .          
+45         -INF            0.0010        +INF             .          
+46         -INF            0.0010        +INF             .          
+47         -INF            0.0010        +INF             .          
+48         -INF            0.0010        +INF             .          
+49         -INF            0.0010        +INF             .          
+50         -INF            0.0010        +INF             .          
+51         -INF      1.126506E-14        +INF             .          
+52         -INF      1.126506E-14        +INF             .          
+53         -INF      1.126506E-14        +INF             .          
+54         -INF      1.126506E-14        +INF             .          
+55         -INF      1.126506E-14        +INF             .          
+56         -INF      1.126506E-14        +INF             .          
+57         -INF      1.126506E-14        +INF             .          
+58         -INF      1.126506E-14        +INF             .          
+59         -INF      1.126506E-14        +INF             .          
+60         -INF      1.126506E-14        +INF             .          
+61         -INF      1.126506E-14        +INF             .          
+62         -INF      1.126506E-14        +INF             .          
+63         -INF      1.126506E-14        +INF             .          
+64         -INF      1.126506E-14        +INF             .          
+65         -INF      1.126506E-14        +INF             .          
+66         -INF      1.126506E-14        +INF             .          
+67         -INF      1.126506E-14        +INF             .          
+68         -INF      1.126506E-14        +INF             .          
+69         -INF      1.126506E-14        +INF             .          
+70         -INF      1.126506E-14        +INF             .          
+71         -INF      1.126506E-14        +INF             .          
+72         -INF      1.126506E-14        +INF             .          
+73         -INF      1.126506E-14        +INF             .          
+74         -INF      1.126506E-14        +INF             .          
+75         -INF      1.126506E-14        +INF             .          
+76         -INF      1.126506E-14        +INF             .          
+77         -INF      1.126506E-14        +INF             .          
+78         -INF      1.126506E-14        +INF             .          
+79         -INF      1.126506E-14        +INF             .          
+80         -INF      1.126506E-14        +INF             .          
+81         -INF      1.126506E-14        +INF             .          
+82         -INF      1.126506E-14        +INF             .          
+83         -INF      1.126506E-14        +INF             .          
+84         -INF      1.126506E-14        +INF             .          
+85         -INF      1.126506E-14        +INF             .          
+86         -INF      1.126506E-14        +INF             .          
+87         -INF      1.126506E-14        +INF             .          
+88         -INF      1.126506E-14        +INF             .          
+89         -INF      1.126506E-14        +INF             .          
+90         -INF      1.126506E-14        +INF             .          
+91         -INF      1.126506E-14        +INF             .          
+92         -INF      1.126506E-14        +INF             .          
+93         -INF      1.126506E-14        +INF             .          
+94         -INF      1.126506E-14        +INF             .          
+95         -INF      1.126506E-14        +INF             .          
+96         -INF      1.126506E-14        +INF             .          
+97         -INF      1.126506E-14        +INF             .          
+98         -INF      1.126506E-14        +INF             .          
+99         -INF      1.126506E-14        +INF             .          
+100        -INF      1.126506E-14        +INF             .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR obj               -INF            0.8558        +INF             .          
+
+  obj  criterion
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+
+
+EXECUTION TIME       =        1.938 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\reactorbatch.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\reactorbatch.lst

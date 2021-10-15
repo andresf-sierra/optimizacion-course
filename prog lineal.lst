@@ -1,0 +1,179 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/20/21 17:59:08 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   3   
+   4  option limrow=0;
+   5  option limcol=0;
+   6  option solprint=on;
+   7  option sysout=off;
+   8   
+   9  option LP=CPLEX;
+  10  option MIP=CPLEX;
+  11  option NLP=CONOPT;
+  12  option MINLP=DICOPT;
+  13  option OPTCR=0;
+  14   
+  15   
+      Se trata de resolver la siguiente ecuacion lineal sujeta a una serie de restricciones
+       
+      Min F(x) = 3*x1 + 2*x2 + x3 + 2*x4 + 3*x5     (Func.Objetivo)
+       
+      s.a:
+               2*x1 + 5*x2 + x4 + x5 >= 6               (1)
+               4*x2 - 2*x3 + 2*x4 + 3*x5 >=5            (2)
+               x1 - 6*x2 + 3*x3 + 7*x4 + 5*x5 >= 7      (3)
+               x1, x2, x3, x4, x5, no negativas
+       
+      En este voy a emplear el uso de SETS y PARAMETROS
+       
+  30   
+  31  SETS
+  32  *Los sets corresponden a las variables, que son:
+  33   
+  34  j variables /j1*j5/
+  35  *Desde j1 a j5 uno por cada variable
+  36  i restricciones /i1*i3/;
+  37  *Desde i1 a 13 por la cantidad de restricciones
+  38   
+  39  *Ahora se definen los parï¿½metros:
+  40   
+  41  PARAMETERS
+  42  *Podemos ingresar por parï¿½metros los coeficientes de la funciï¿½n objetivo
+  43   
+  44  C(j) coeficientes de la funcion F /j1=3, j2=2, j3=1, j4=2, j5=3/
+  45  B(i) valores de las restricciones /i1=6, i2=5, i3=7/;
+  46   
+  47  TABLE A(i,j) matriz
+  48  *i hace referencia a las filas y j a las columnas, lo escribimos igual a las restricciones en matriz
+  49   
+  50           j1      j2      j3      j4      j5
+  51       i1  2       5       0       1       1
+  52       i2  0       4       -2      2       3
+  53       i3  1      -6       3       7       5 ;
+  54   
+  55  VARIABLES
+  56   
+  57  F valor objetivo que queremos sea mï¿½nimo;
+  58   
+  59  POSITIVE VARIABLES
+  60   
+  61  x(j) variables del problema   ;
+  62   
+  63  EQUATIONS
+  64   
+  65  funobj funcion objetivo
+  66  restricciones son las restricciones del problema ;
+  67   
+  68  funobj.. F =E= sum(j, C(j)*x(j));
+  69  *Sumatoria en j(variables), coef de fun por variables del prob
+  70  restricciones(i).. sum(j, A(i,j)*x(j)) =G= B(i);
+  71   
+  72  MODEL proglineal /all/;
+  73   
+  74  SOLVE proglineal using LP minimazing F;
+  75   
+  76   
+  77   
+  78   
+  79   
+  80   
+  81   
+  82   
+  83   
+
+
+COMPILATION TIME     =        0.016 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/20/21 17:59:08 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE proglineal Using LP From line 74
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           2     SINGLE EQUATIONS            4
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES            6
+NON ZERO ELEMENTS            19
+
+
+GENERATION TIME      =        0.093 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/20/21 17:59:08 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE proglineal Using LP From line 74
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   proglineal          OBJECTIVE  F
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  74
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      1 Optimal                   
+**** OBJECTIVE VALUE                5.1707
+
+ RESOURCE USAGE, LIMIT          0.031 10000000000.000
+ ITERATION COUNT, LIMIT         2    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            5.170732
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU funobj              .              .              .             1.0000      
+
+  funobj  funcion objetivo
+
+---- EQU restricciones  son las restricciones del problema
+
+          LOWER          LEVEL          UPPER         MARGINAL
+
+i1         6.0000         6.0000        +INF            0.6341      
+i2         5.0000         6.8780        +INF             .          
+i3         7.0000         7.0000        +INF            0.1951      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR F                 -INF            5.1707        +INF             .          
+
+  F  valor objetivo que queremos sea mï¿½nimo
+
+---- VAR x  variables del problema
+
+          LOWER          LEVEL          UPPER         MARGINAL
+
+j1          .              .            +INF            1.5366      
+j2          .             0.8537        +INF             .          
+j3          .              .            +INF            0.4146      
+j4          .             1.7317        +INF             .          
+j5          .              .            +INF            1.3902      
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+
+
+EXECUTION TIME       =        0.671 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\prog lineal.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\GAMS\prog lineal.lst

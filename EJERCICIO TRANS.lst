@@ -1,0 +1,226 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:02:15 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  *problema de trasnporte
+   2   
+   3  option limrow = 100 ;
+   4  sets
+   5       I      ORIGENES      /CUC , BOY /
+   6       J      DESTINOS      /BOG, BUG, PAM /;
+   7   
+   8  parameters
+   9     A(I)  CANTIDAD DISPONIBLE
+  10     /CUC 350
+  11     BOY  600/
+  12     B(J)   DEMANDA EN DESTINO
+  13     /BOG   325
+  14      BUG   300
+  15      PAM   275 /;
+  16   
+  17  TABLE D(I,J)   DISTANCIA EN KILOMETROS
+  18   
+  19        BOG     BUG     PAM
+  20   CUC  538     1046    439
+  21   BOY  393     693     673
+  22   
+  23   
+  24  SCALAR F    COSTE POR KILOMETRO /5/ ;
+  25   
+  26  PARAMETER    C(I,J) COSTE DE TRANSPORTE ;
+  27           C(I,J) = F*D(I,J) ;
+  28   
+  29  VARIABLES
+  30  X(I,J)
+  31  Z;
+  32  POSITIVE VARIABLES X;
+  33   
+  34  EQUATIONS
+  35  OBJ
+  36  OFERTA (I)
+  37  DEMANDA (J);
+  38   
+  39  OBJ .. Z =E= SUM((I,J), C(I,J) * X (I,J) ) ;
+  40  OFERTA ( I ) .. SUM (J , X ( I,J) ) =L= A (I) ;
+  41  DEMANDA (J) .. SUM (I, X (I,J)) =G= B (J) ;
+  42   
+  43  MODEL TRANS1 /ALL/
+  44   
+  45  SOLVE TRANS1 USING LP MINIMIZING Z ;
+  46  DISPLAY x.L , z.L ;
+
+
+COMPILATION TIME     =        0.047 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:02:15 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE TRANS1 Using LP From line 45
+
+
+---- OBJ  =E=  
+
+OBJ..  - 2690*X(CUC,BOG) - 5230*X(CUC,BUG) - 2195*X(CUC,PAM) - 1965*X(BOY,BOG)
+     
+      - 3465*X(BOY,BUG) - 3365*X(BOY,PAM) + Z =E= 0 ; (LHS = 0)
+     
+
+---- OFERTA  =L=  
+
+OFERTA(CUC)..  X(CUC,BOG) + X(CUC,BUG) + X(CUC,PAM) =L= 350 ; (LHS = 0)
+     
+OFERTA(BOY)..  X(BOY,BOG) + X(BOY,BUG) + X(BOY,PAM) =L= 600 ; (LHS = 0)
+     
+
+---- DEMANDA  =G=  
+
+DEMANDA(BOG)..  X(CUC,BOG) + X(BOY,BOG) =G= 325 ; (LHS = 0, INFES = 325 ****)
+     
+DEMANDA(BUG)..  X(CUC,BUG) + X(BOY,BUG) =G= 300 ; (LHS = 0, INFES = 300 ****)
+     
+DEMANDA(PAM)..  X(CUC,PAM) + X(BOY,PAM) =G= 275 ; (LHS = 0, INFES = 275 ****)
+     
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:02:15 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE TRANS1 Using LP From line 45
+
+
+---- X  
+
+X(CUC,BOG)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -2690       OBJ
+        1       OFERTA(CUC)
+        1       DEMANDA(BOG)
+
+X(CUC,BUG)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -5230       OBJ
+        1       OFERTA(CUC)
+        1       DEMANDA(BUG)
+
+X(CUC,PAM)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+    -2195       OBJ
+        1       OFERTA(CUC)
+        1       DEMANDA(PAM)
+
+REMAINING 3 ENTRIES SKIPPED
+
+---- Z  
+
+Z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       OBJ
+
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:02:15 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE TRANS1 Using LP From line 45
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            6
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES            7
+NON ZERO ELEMENTS            19
+
+
+GENERATION TIME      =        0.062 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:02:15 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE TRANS1 Using LP From line 45
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   TRANS1              OBJECTIVE  Z
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  45
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      1 Optimal                   
+**** OBJECTIVE VALUE          2299875.0000
+
+ RESOURCE USAGE, LIMIT          0.109 10000000000.000
+ ITERATION COUNT, LIMIT         4    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.08sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:      2299875.000000
+
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- EQU OBJ             .         .         .        1.000      
+
+---- EQU OFERTA  
+
+       LOWER     LEVEL     UPPER    MARGINAL
+
+CUC     -INF    300.000   350.000      .         
+BOY     -INF    600.000   600.000  -725.000      
+
+---- EQU DEMANDA  
+
+       LOWER     LEVEL     UPPER    MARGINAL
+
+BOG   325.000   325.000     +INF   2690.000      
+BUG   300.000   300.000     +INF   4190.000      
+PAM   275.000   275.000     +INF   2195.000      
+
+---- VAR X  
+
+           LOWER     LEVEL     UPPER    MARGINAL
+
+CUC.BOG      .       25.000     +INF       .         
+CUC.BUG      .         .        +INF   1040.000      
+CUC.PAM      .      275.000     +INF       .         
+BOY.BOG      .      300.000     +INF       .         
+BOY.BUG      .      300.000     +INF       .         
+BOY.PAM      .         .        +INF   1895.000      
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- VAR Z              -INF  2.2999E+6     +INF       .         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 04/27/21 18:02:15 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     46 VARIABLE X.L  
+
+            BOG         BUG         PAM
+
+CUC      25.000                 275.000
+BOY     300.000     300.000
+
+
+----     46 VARIABLE Z.L                   =  2299875.000  
+
+
+EXECUTION TIME       =        1.640 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Progra
+           mas GAMS\EJERCICIO TRANS.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Progra
+           mas GAMS\EJERCICIO TRANS.lst

@@ -1,0 +1,225 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 05/03/21 22:28:51 Page 1
+PROBLEMA DE LA PLANIFICACIÓN DE LA PRODUCCIÓN
+C o m p i l a t i o n
+
+
+   2   
+   3  SET
+   4   
+   5  T indice de los meses /0*4/;
+   6   
+   7  PARAMETER
+   8   
+   9  Y(T) demanda en el mes T
+  10   
+  11   
+  12      /1 2
+  13       2 3
+  14       3 6
+  15       4 1/
+  16   
+  17  A(T)
+  18  B(T)
+  19  C(T);
+  20   
+  21  A(T)=1; B(T)=1; C(T)=1;
+  22   
+  23  VARIABLES
+  24   
+  25  Z valor de la función objetivo
+  26  x(T) numero de unidades producidas en el mes T
+  27  s(T) numero de unidades almacenadas en el mes T;
+  28   
+  29  POSITIVE VARIABLES x(T), s(T);
+  30   
+  31  s.fx('0')=2;
+  32   
+  33  EQUATIONS
+  34   
+  35  COST funcion objetivo
+  36  INOUT(T) balance de entradas y salidas;
+  37   
+  38  COST.. Z=E= SUM(T$(ORD(T) gt 1), A(T)*Y(T)-B(T)*x(T)-C(T)*s(T));
+  39  INOUT(T)$(ord(T) gt 1)..s(T)=E= s(T-1)+x(T)-Y(T);
+  40   
+  41  MODEL planificacion /ALL/;
+  42   
+  43  SOLVE planificacion USUING LP MAXIMIZING Z;
+  44   
+  45   
+  46   
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 05/03/21 22:28:51 Page 2
+PROBLEMA DE LA PLANIFICACIÓN DE LA PRODUCCIÓN
+Equation Listing    SOLVE planificacion Using LP From line 43
+
+
+---- COST  =E=  funcion objetivo
+
+COST..  Z + x(1) + x(2) + x(3) + x(4) + s(1) + s(2) + s(3) + s(4) =E= 12 ; (LHS = 0, INFES = 12 ****)
+     
+
+---- INOUT  =E=  balance de entradas y salidas
+
+INOUT(1)..  - x(1) - s(0) + s(1) =E= -2 ; (LHS = -2)
+     
+INOUT(2)..  - x(2) - s(1) + s(2) =E= -3 ; (LHS = 0, INFES = 3 ****)
+     
+INOUT(3)..  - x(3) - s(2) + s(3) =E= -6 ; (LHS = 0, INFES = 6 ****)
+     
+REMAINING ENTRY SKIPPED
+
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 05/03/21 22:28:51 Page 3
+PROBLEMA DE LA PLANIFICACIÓN DE LA PRODUCCIÓN
+Column Listing      SOLVE planificacion Using LP From line 43
+
+
+---- Z  valor de la función objetivo
+
+Z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       COST
+
+
+---- x  numero de unidades producidas en el mes T
+
+x(1)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       COST
+       -1       INOUT(1)
+
+x(2)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       COST
+       -1       INOUT(2)
+
+x(3)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       COST
+       -1       INOUT(3)
+
+REMAINING ENTRY SKIPPED
+
+---- s  numero de unidades almacenadas en el mes T
+
+s(0)
+                (.LO, .L, .UP, .M = 2, 2, 2, 0)
+       -1       INOUT(1)
+
+s(1)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       COST
+        1       INOUT(1)
+       -1       INOUT(2)
+
+s(2)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       COST
+        1       INOUT(2)
+       -1       INOUT(3)
+
+REMAINING 2 ENTRIES SKIPPED
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 05/03/21 22:28:51 Page 4
+PROBLEMA DE LA PLANIFICACIÓN DE LA PRODUCCIÓN
+Model Statistics    SOLVE planificacion Using LP From line 43
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           2     SINGLE EQUATIONS            5
+BLOCKS OF VARIABLES           3     SINGLE VARIABLES           10
+NON ZERO ELEMENTS            21
+
+
+GENERATION TIME      =        0.391 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 05/03/21 22:28:51 Page 5
+PROBLEMA DE LA PLANIFICACIÓN DE LA PRODUCCIÓN
+Solution Report     SOLVE planificacion Using LP From line 43
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   planificacion       OBJECTIVE  Z
+     TYPE    LP                  DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  43
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      1 Optimal                   
+**** OBJECTIVE VALUE                2.0000
+
+ RESOURCE USAGE, LIMIT          0.953 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.19sec (det. 0.01 ticks)
+
+
+Optimal solution found
+Objective:            2.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU COST              12.0000        12.0000        12.0000         1.0000      
+
+  COST  funcion objetivo
+
+---- EQU INOUT  balance de entradas y salidas
+
+         LOWER          LEVEL          UPPER         MARGINAL
+
+1        -2.0000        -2.0000        -2.0000         1.0000      
+2        -3.0000        -3.0000        -3.0000         1.0000      
+3        -6.0000        -6.0000        -6.0000         1.0000      
+4        -1.0000        -1.0000        -1.0000         1.0000      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR Z                 -INF            2.0000        +INF             .          
+
+  Z  valor de la función objetivo
+
+---- VAR x  numero de unidades producidas en el mes T
+
+         LOWER          LEVEL          UPPER         MARGINAL
+
+1          .              .            +INF             .          
+2          .             3.0000        +INF             .          
+3          .             6.0000        +INF             .          
+4          .             1.0000        +INF             .          
+
+---- VAR s  numero de unidades almacenadas en el mes T
+
+         LOWER          LEVEL          UPPER         MARGINAL
+
+0         2.0000         2.0000         2.0000         1.0000      
+1          .              .            +INF           -1.0000      
+2          .              .            +INF           -1.0000      
+3          .              .            +INF           -1.0000      
+4          .              .            +INF           -2.0000      
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+
+
+EXECUTION TIME       =        1.812 SECONDS      4 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: GAMS Demo license for Andres Sierra            G210406|0002CO-GEN
+      Universidad de Pamplona, Colombia                        DL037498
+
+
+**** FILE SUMMARY
+
+Input      D:\OneDrive - Universidad de Pamplona\Optimizaci�n de Procesos\Programas GAMS\problema_de_produccion.gms
+Output     D:\OneDrive - Universidad de Pamplona\Optimizaci�n de Procesos\Programas GAMS\problema_de_produccion.lst

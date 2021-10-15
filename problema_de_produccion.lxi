@@ -1,0 +1,15 @@
+B 3 C o m p i l a t i o n
+B 56 Equation Listing    SOLVE planificacion Using LP From line 43
+D 59 COST
+D 64 INOUT
+B 76 Column Listing      SOLVE planificacion Using LP From line 43
+E 79 Z
+E 86 x
+E 105 s
+B 126 Model Statistics    SOLVE planificacion Using LP From line 43
+B 139 Solution Report     SOLVE planificacion Using LP From line 43
+F 171 COST
+F 175 INOUT
+G 186 Z
+G 190 x
+G 199 s

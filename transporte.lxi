@@ -1,0 +1,15 @@
+B 3 C o m p i l a t i o n
+B 54 Equation Listing    SOLVE transporte Using LP From line 43
+D 57 obj
+D 64 capacidad
+D 71 demanda
+B 81 Column Listing      SOLVE transporte Using LP From line 43
+E 84 x
+E 106 z
+B 114 Model Statistics    SOLVE transporte Using LP From line 43
+B 127 Solution Report     SOLVE transporte Using LP From line 43
+F 159 obj
+F 161 capacidad
+F 168 demanda
+G 176 x
+G 189 z

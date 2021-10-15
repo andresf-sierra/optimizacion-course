@@ -1,0 +1,13 @@
+B 3 C o m p i l a t i o n
+B 63 Model Statistics    SOLVE problema1 Using LP From line 51
+B 76 Solution Report     SOLVE problema1 Using LP From line 51
+F 108 funobj
+F 109 eq1
+F 110 eq2
+F 111 eq3
+G 115 x1
+G 116 x2
+G 117 x3
+G 118 x4
+G 119 x5
+G 120 F

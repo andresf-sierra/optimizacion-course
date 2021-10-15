@@ -1,0 +1,14 @@
+[PROJECT]
+
+[RP:UNTITLED_1]
+1=
+
+[OPENWINDOW_1]
+FILE0=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\Untitled_1.gms
+FILE1=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\Untitled_1.lst
+FILE2=D:\OneDrive - Universidad de Pamplona\Optimización de Procesos\Programas GAMS\Untitled_1.gms
+MAXIM=1
+TOP=-4
+LEFT=28
+HEIGHT=660
+WIDTH=679
